@@ -1,1 +1,5 @@
-# 2-sunday-ahn-community-be
+# 커뮤니티 만들기 과제<br>
+아직 작업중....
+
+# 실행방법<br>
+FE와 똑같이 npm run dev (추후 수정예정)
