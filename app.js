@@ -3,7 +3,8 @@ const timeout = require('connect-timeout');
 const rateLimit = require("express-rate-limit");
 const helmet = require('helmet');
 const userRoutes = require('./routers/userRouter'); // userRoutes 불러오기
-const postRoutes = require('./routers/postRouter'); // userRoutes 불러오기
+const postRoutes = require('./routers/postRouter'); // postRoutes 불러오기
+const commonRoutes = require('./routers/commonRouter'); // commonRouter 불러오기
 const PORT = process.env.PORT || 3000;
 const app = express();
 // cors정책에 막혀서 미들웨어 설정
@@ -43,8 +44,9 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 
 // '/' 경로를 userRoutes로 매핑
-app.use(['/user','/'], userRoutes); 
-app.use('/post', postRoutes); 
+app.use('/auth', commonRoutes)
+app.use('/users', userRoutes); 
+app.use('/posts', postRoutes); 
 
 app.listen(PORT, () => {
     console.log(`${PORT}에서 서버 실행 중`);

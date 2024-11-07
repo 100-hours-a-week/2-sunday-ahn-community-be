@@ -1,14 +1,14 @@
 [
   {
     "email": "asdf@qwer.com",
-    "password": "Rkawk123!",
+    "password": "Qwer123!",
     "nickname": "sunday",
-    "profileImage": "1730337903227-242877479.png"
+    "profileImage": "sample.jpeg"
   },
   {
     "email": "asdf@asdf.com",
     "password": "Asdf123!",
-    "nickname": "p",
-    "profileImage": "1730349595462-350346841.png"
+    "nickname": "hehe",
+    "profileImage": "sample.jpeg"
   }
 ]
