@@ -10,5 +10,11 @@
     "password": "Asdf123!",
     "nickname": "hehe",
     "profileImage": "sample.jpeg"
+  },
+  {
+    "email": "sunday@adf.com",
+    "password": "Asdf123!",
+    "nickname": "sunday",
+    "profileImage": "http://localhost:2000/images/profile1730965486771.png"
   }
 ]

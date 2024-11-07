@@ -38,40 +38,30 @@ exports.loginCheck = (req, res) => {
 
 // 회원가입 처리
 exports.regist = (req, res) => {
-    const { email, password, nickname, profileImage } = req.body; 
-    const profileImageData = profileImage.split(';base64,').pop(); 
+    const { email, password, nickname, profileImage } = req.body;
 
-    const uniqueFilename = `${Date.now()}-${Math.round(Math.random() * 1E9)}.png`;
-    const filePath = path.join(__dirname, '../config/profileImgs', uniqueFilename);
+    // 이미지 URL을 그대로 사용하여 사용자 데이터 저장
+    const newUser = { email, password, nickname, profileImage }; 
 
-    // 프로필 이미지 저장
-    fs.writeFile(filePath, profileImageData, { encoding: 'base64' }, (err) => {
-        if (err) {
-            console.error('이미지 파일 저장 오류:', err);
-            return res.status(500).json({ error: '이미지 저장에 실패했습니다.' });
+    // 기존 사용자 데이터를 읽어옴
+    fs.readFile(usersFilePath, 'utf-8', (err, data) => {
+        let users = [];
+
+        if (!err) {
+            users = JSON.parse(data); // 기존 사용자 목록 불러오기
         }
 
-        // 사용자 데이터 저장
-        const newUser = { email, password, nickname, profileImage: uniqueFilename };
-        
-        fs.readFile(usersFilePath, 'utf-8', (err, data) => {
-            let users = [];
+        users.push(newUser); // 새로운 사용자 추가
 
-            if (!err) {
-                users = JSON.parse(data); // 기존 사용자 목록 불러오기
+        // 새로운 사용자 데이터를 파일에 저장
+        fs.writeFile(usersFilePath, JSON.stringify(users, null, 2), 'utf-8', (err) => {
+            if (err) {
+                console.error('사용자 데이터 저장 오류:', err);
+                return res.status(500).json({ error: '회원가입 저장에 실패했습니다.' });
             }
 
-            users.push(newUser); // 새로운 사용자 추가
-
-            fs.writeFile(usersFilePath, JSON.stringify(users, null, 2), 'utf-8', (err) => {
-                if (err) {
-                    console.error('사용자 데이터 저장 오류:', err);
-                    return res.status(500).json({ error: '회원가입 저장에 실패했습니다.' });
-                }
-
-                console.log('회원가입 완료:', newUser);
-                res.status(200).json({ message: '회원가입이 성공적으로 완료되었습니다!' });
-            });
+            console.log('회원가입 완료:', newUser);
+            res.status(200).json({ message: '회원가입이 성공적으로 완료되었습니다!' });
         });
     });
 };
