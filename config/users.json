@@ -1,20 +1,23 @@
 [
   {
+    "userId": 1,
     "email": "asdf@qwer.com",
     "password": "Qwer123!",
     "nickname": "sunday",
     "profileImage": "sample.jpeg"
   },
   {
+    "userId": 2,
     "email": "asdf@asdf.com",
     "password": "Asdf123!",
     "nickname": "hehe",
     "profileImage": "sample.jpeg"
   },
   {
-    "email": "sunday@adf.com",
+    "userId": 3,
+    "email": "haha@adf.com",
     "password": "Asdf123!",
-    "nickname": "sunday",
+    "nickname": "haha",
     "profileImage": "http://localhost:2000/images/profile1730965486771.png"
   }
 ]

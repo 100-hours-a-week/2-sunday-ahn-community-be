@@ -1,0 +1,48 @@
+{
+    "comments": [
+        {
+            "commentId": 1,
+            "postId": 1,
+            "content": "오!",
+            "author": {
+                "userId": 2,
+                "nickname": "hehe",
+                "profileImg": "http://localhost:2000/images/profileImg2.jpeg"
+            },
+            "date": "2021-01-01 01:00:00"
+        },
+        {
+            "commentId": 2,
+            "postId": 1,
+            "content": "흥미롭네요.",
+            "author": {
+                "userId": 3,
+                "nickname": "haha",
+                "profileImg": "http://localhost:2000/images/profileImg3.jpeg"
+            },
+            "date": "2021-01-01 02:00:00"
+        },
+        {
+            "commentId": 3,
+            "postId": 2,
+            "content": "I disagree with this post.",
+            "author": {
+                "userId": 4,
+                "nickname": "Commenter 3",
+                "profileImg": "http://localhost:2000/images/profileImg4.jpeg"
+            },
+            "date": "2021-02-01 01:00:00"
+        },
+        {
+            "commentId": 4,
+            "postId": 3,
+            "content": "I disagree with this post.",
+            "author": {
+                "userId": 4,
+                "nickname": "Commenter 3",
+                "profileImg": "http://localhost:2000/images/profileImg4.jpeg"
+            },
+            "date": "2021-02-01 01:00:00"
+        }
+    ]
+}
