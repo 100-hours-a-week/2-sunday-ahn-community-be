@@ -1,48 +1,59 @@
 {
-    "comments": [
-        {
-            "commentId": 1,
-            "postId": 1,
-            "content": "오!",
-            "author": {
-                "userId": 2,
-                "nickname": "hehe",
-                "profileImg": "http://localhost:2000/images/profileImg2.jpeg"
-            },
-            "date": "2021-01-01 01:00:00"
-        },
-        {
-            "commentId": 2,
-            "postId": 1,
-            "content": "흥미롭네요.",
-            "author": {
-                "userId": 3,
-                "nickname": "haha",
-                "profileImg": "http://localhost:2000/images/profileImg3.jpeg"
-            },
-            "date": "2021-01-01 02:00:00"
-        },
-        {
-            "commentId": 3,
-            "postId": 2,
-            "content": "I disagree with this post.",
-            "author": {
-                "userId": 4,
-                "nickname": "Commenter 3",
-                "profileImg": "http://localhost:2000/images/profileImg4.jpeg"
-            },
-            "date": "2021-02-01 01:00:00"
-        },
-        {
-            "commentId": 4,
-            "postId": 3,
-            "content": "I disagree with this post.",
-            "author": {
-                "userId": 4,
-                "nickname": "Commenter 3",
-                "profileImg": "http://localhost:2000/images/profileImg4.jpeg"
-            },
-            "date": "2021-02-01 01:00:00"
-        }
-    ]
+  "comments": [
+    {
+      "commentId": 2,
+      "postId": 1,
+      "content": "흥미롭네요.",
+      "author": {
+        "userId": 3,
+        "nickname": "haha",
+        "profileImg": "http://localhost:2000/images/profileImg3.jpeg"
+      },
+      "date": "2021-01-01 02:00:00"
+    },
+    {
+      "commentId": 3,
+      "postId": 2,
+      "content": "I disagree with this post.ㅁㄴㅇㄹ",
+      "author": {
+        "userId": 4,
+        "nickname": "Commenter 3",
+        "profileImg": "http://localhost:2000/images/profileImg4.jpeg"
+      },
+      "date": "2024-11-10 22:37:46"
+    },
+    {
+      "commentId": 4,
+      "postId": 3,
+      "content": "I disagree with this post.",
+      "author": {
+        "userId": 4,
+        "nickname": "Commenter 3",
+        "profileImg": "http://localhost:2000/images/profileImg4.jpeg"
+      },
+      "date": "2021-02-01 01:00:00"
+    },
+    {
+      "commentId": 5,
+      "postId": 1,
+      "content": "함 해보겠으",
+      "author": {
+        "userId": 1,
+        "nickname": "sunday",
+        "profileImage": "sample.jpeg"
+      },
+      "date": "2024-11-11 22:42:30"
+    },
+    {
+      "commentId": 6,
+      "postId": 4,
+      "content": "ㅎㅎ",
+      "author": {
+        "userId": 1,
+        "nickname": "sunday",
+        "profileImage": "sample.jpeg"
+      },
+      "date": "2024-11-11 23:44:53"
+    }
+  ]
 }

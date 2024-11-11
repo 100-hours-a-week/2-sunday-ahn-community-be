@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const userRoutes = require('./routers/userRouter'); // userRoutes 불러오기
 const postRoutes = require('./routers/postRouter'); // postRoutes 불러오기
 const commonRoutes = require('./routers/commonRouter'); // commonRouter 불러오기
+const commentRoutes = require('./routers/commentRouter'); // commentsRouter 불러오기
 const PORT = process.env.PORT || 3000;
 const app = express();
 // cors정책에 막혀서 미들웨어 설정
@@ -47,6 +48,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use('/auth', commonRoutes)
 app.use('/users', userRoutes); 
 app.use('/posts', postRoutes); 
+app.use('/comments', commentRoutes); 
 
 app.listen(PORT, () => {
     console.log(`${PORT}에서 서버 실행 중`);
