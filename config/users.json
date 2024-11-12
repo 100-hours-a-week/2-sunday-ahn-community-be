@@ -19,5 +19,12 @@
     "password": "Asdf123!",
     "nickname": "haha",
     "profileImage": "http://localhost:2000/images/profile1730965486771.png"
+  },
+  {
+    "email": "qwe@qwe.com",
+    "password": "Qwer123!",
+    "nickname": "Sunday",
+    "profileImage": "http://localhost:2000/images/profile1731435915763.png",
+    "userId": 4
   }
 ]

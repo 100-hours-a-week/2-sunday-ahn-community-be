@@ -59,6 +59,21 @@
         "profileImg": "sample.jpeg"
       },
       "postId": 4
+    },
+    {
+      "title": "히히",
+      "content": "헤헤",
+      "likes": 0,
+      "views": 1,
+      "commentsCnt": 0,
+      "date": "2024-11-13 03:07:49",
+      "imageUrl": null,
+      "author": {
+        "userId": 1,
+        "nickname": "sunday",
+        "profileImg": "sample.jpeg"
+      },
+      "postId": 5
     }
   ]
 }
