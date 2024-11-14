@@ -11,7 +11,7 @@
     "email": "asdf@asdf.com",
     "password": "Asdf123!",
     "nickname": "hehe",
-    "profileImage": "sample.jpeg"
+    "profileImage": "http://localhost:2000/images/sample.jpeg"
   },
   {
     "userId": 3,
@@ -23,8 +23,15 @@
   {
     "email": "qwe@qwe.com",
     "password": "Qwer123!",
-    "nickname": "Sunday",
+    "nickname": "lastTester",
     "profileImage": "http://localhost:2000/images/profile1731435915763.png",
     "userId": 4
+  },
+  {
+    "email": "zxcv@zxcv.com",
+    "password": "Zxcv123!",
+    "nickname": "sun",
+    "profileImage": "http://localhost:2000/images/profile1731602850164.png",
+    "userId": 5
   }
 ]

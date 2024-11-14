@@ -155,7 +155,7 @@ exports.addComment = (req, res) => {
                 date: date,
             };
 
-            commentsData.comments.push(newComment);
+            commentsData.comments.unshift(newComment);
 
             // 게시물의 commentsCnt 증가
             fs.readFile(postsFilePath, 'utf8', (err, postData) => {

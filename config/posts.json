@@ -1,79 +1,64 @@
 {
   "posts": [
     {
-      "postId": 1,
-      "title": "Title 1_수정2",
-      "content": "첫번째 게시글 입니다.수정2",
-      "likes": 5,
-      "views": 232,
-      "commentsCnt": 2,
-      "date": "2024-11-10 20:13:36",
-      "imageUrl": "http://localhost:2000/images/contentImg/img1.jpeg",
-      "author": {
-        "userId": 1,
-        "nickname": "sunday",
-        "profileImg": "http://localhost:2000/images/profileImg1.jpeg"
-      }
-    },
-    {
-      "postId": 2,
-      "title": "Title 2",
-      "content": "This is the content for the second post.",
-      "likes": 85,
-      "views": 183,
-      "commentsCnt": 1,
-      "date": "2021-02-01 00:00:00",
-      "imageUrl": "http://localhost:2000/images/contentImg/img2.jpeg",
-      "author": {
-        "userId": 2,
-        "nickname": "Author 2",
-        "profileImg": "http://localhost:2000/images/profileImg2.jpeg"
-      }
-    },
-    {
-      "postId": 3,
-      "title": "Title 3",
-      "content": "This is the content for the third post.",
-      "likes": 43,
-      "views": 102,
-      "commentsCnt": 1,
-      "date": "2021-03-01 00:00:00",
-      "imageUrl": "http://localhost:2000/images/contentImg/img3.jpeg",
-      "author": {
-        "userId": 3,
-        "nickname": "Author 3",
-        "profileImg": "http://localhost:2000/images/profileImg3.jpeg"
-      }
-    },
-    {
-      "title": "ㅁㄴㅇㄹ",
-      "content": "테스트용임다",
+      "postId": 4,
+      "title": "새로쓴거 최상단에 오나?",
+      "content": "맞으면좋겠는디",
       "likes": 0,
-      "views": 1,
-      "commentsCnt": 1,
-      "date": "2024-11-11 23:44:42",
-      "imageUrl": null,
-      "author": {
-        "userId": 1,
-        "nickname": "sunday",
-        "profileImg": "sample.jpeg"
-      },
-      "postId": 4
-    },
-    {
-      "title": "히히",
-      "content": "헤헤",
-      "likes": 0,
-      "views": 1,
+      "views": 4,
       "commentsCnt": 0,
-      "date": "2024-11-13 03:07:49",
+      "date": "2024-11-15 02:13:30",
+      "imageUrl": null,
+      "author": {
+        "userId": 1,
+        "nickname": "sunday",
+        "profileImg": "sample.jpeg"
+      }
+    },
+    {
+      "title": "세번째 게시물 수정하면 위로가나?",
+      "content": "세번째",
+      "likes": 0,
+      "views": 4,
+      "commentsCnt": 1,
+      "date": "2024-11-15 02:11:06",
       "imageUrl": null,
       "author": {
         "userId": 1,
         "nickname": "sunday",
         "profileImg": "sample.jpeg"
       },
-      "postId": 5
+      "postId": 3
+    },
+    {
+      "title": "첫번째 게시물",
+      "content": "첫번째",
+      "likes": 0,
+      "views": 3,
+      "commentsCnt": 2,
+      "date": "2024-11-15 02:06:41",
+      "imageUrl": null,
+      "author": {
+        "userId": 1,
+        "nickname": "sunday",
+        "profileImg": "sample.jpeg"
+      },
+      "postId": 1
+    },
+    {
+      "title": "두번째 게시물",
+      "content": "두번째",
+      "likes": 0,
+      "views": 4,
+      "commentsCnt": 1,
+      "date": "2024-11-15 02:06:58",
+      "imageUrl": null,
+      "author": {
+        "userId": 1,
+        "nickname": "sunday",
+        "profileImg": "sample.jpeg"
+      },
+      "postId": 2
     }
   ]
 }

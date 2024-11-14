@@ -8,7 +8,7 @@ app.use(express.json()); // JSON 형식의 요청 본문을 파싱
 const usersFilePath = path.join(__dirname, '../config/users.json'); // 사용자 데이터 파일 경로
 
 // 로그인 검증
-exports.loginCheck = (req, res) => {
+exports.login = (req, res) => {
     const { email, password } = req.body;
 
     // 파일에서 사용자 정보 읽기
@@ -79,5 +79,81 @@ exports.regist = (req, res) => {
             console.log('회원가입 완료:', newUser);
             res.status(200).json({ message: "회원가입이 성공적으로 완료되었습니다!", data: null });
         });
+    });
+};
+
+// 이메일 중복 검사
+exports.emailCheck = (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({
+            message: "*이메일을 입력해주세요.",
+            data: null
+        });
+    }
+
+    // 파일에서 사용자 정보 읽기
+    fs.readFile(usersFilePath, 'utf-8', (err, data) => {
+        if (err) {
+            console.error('사용자 파일 읽기 오류:', err);
+            return res.status(500).json({
+                message: "서버에 오류가 발생했습니다.",
+                data: null
+            });
+        }
+
+        const users = JSON.parse(data);
+        const emailExists = users.some(user => user.email === email);
+
+        if (emailExists) {
+            return res.status(401).json({
+                message: "*중복된 이메일입니다",
+                data: null
+            });
+        } else {
+            return res.status(200).json({
+                message: "이메일 중복 검사 성공",
+                data: null
+            });
+        }
+    });
+};
+
+// 닉네임 중복 검사
+exports.nicknameCheck = (req, res) => {
+    const { nickname } = req.body;
+
+    if (!nickname) {
+        return res.status(400).json({
+            message: "*닉네임을 입력해주세요.",
+            data: null
+        });
+    }
+
+    // 파일에서 사용자 정보 읽기
+    fs.readFile(usersFilePath, 'utf-8', (err, data) => {
+        if (err) {
+            console.error('사용자 파일 읽기 오류:', err);
+            return res.status(500).json({
+                message: "서버에 오류가 발생했습니다.",
+                data: null
+            });
+        }
+
+        const users = JSON.parse(data);
+        const nicknameExists = users.some(user => user.nickname === nickname);
+
+        if (nicknameExists) {
+            return res.status(401).json({
+                message: "*중복된 닉네임입니다",
+                data: null
+            });
+        } else {
+            return res.status(200).json({
+                message: "닉네임 중복 검사 성공",
+                data: null
+            });
+        }
     });
 };

@@ -128,13 +128,43 @@ exports.deletePost = (req, res) => {
                 });
             }
 
-            return res.status(200).json({
-                message: "게시물 삭제 성공",
-                data: null
+            // 댓글 데이터 파일 읽기
+            fs.readFile(commentsFilePath, 'utf8', (err, commentData) => {
+                if (err) {
+                    console.error("댓글 데이터를 읽는 중 오류가 발생했습니다:", err);
+                    return res.status(500).json({
+                        message: "서버에 오류가 발생했습니다.",
+                        data: null
+                    });
+                }
+
+                let commentsData = JSON.parse(commentData); // 댓글 데이터 JSON 파싱
+                const originalComments = commentsData.comments;
+
+                // postId가 삭제할 게시물의 postId와 같은 댓글을 제외
+                const updatedComments = originalComments.filter(comment => comment.postId !== postId);
+
+                // comments.json 파일 업데이트
+                fs.writeFile(commentsFilePath, JSON.stringify({ comments: updatedComments }, null, 2), 'utf8', (err) => {
+                    if (err) {
+                        console.error("댓글 데이터를 저장하는 중 오류가 발생했습니다:", err);
+                        return res.status(500).json({
+                            message: "서버에 오류가 발생했습니다.",
+                            data: null
+                        });
+                    }
+
+                    // 게시물과 댓글 삭제 성공 응답
+                    return res.status(200).json({
+                        message: "게시물 삭제 성공",
+                        data: null
+                    });
+                });
             });
         });
     });
 };
+
 
 // 게시물 수정
 exports.editPost = (req, res) => {
@@ -153,14 +183,12 @@ exports.editPost = (req, res) => {
             return res.status(404).json({ message: "해당 게시물이 존재하지 않습니다.", data: null });
         }
 
+        // 해당 게시물 정보 업데이트
         const post = postsData.posts[postIndex];
-
-        // 제목과 내용 업데이트
         if (newTitle) post.title = newTitle;
         if (newContent) post.content = newContent;
         if (editDate) post.date = editDate;
 
-        // 이미지 업데이트: 새 이미지 URL이 있으면 기존 이미지 파일 삭제
         if (imageUrl && post.imageUrl !== imageUrl) {
             const oldImagePath = path.join(__dirname, '../public', post.imageUrl);
             if (fs.existsSync(oldImagePath)) {
@@ -168,6 +196,11 @@ exports.editPost = (req, res) => {
             }
             post.imageUrl = imageUrl;
         }
+
+        // 수정된 게시물을 배열 맨 앞에 위치시키기 위해 배열에서 제거 후 추가
+        postsData.posts.splice(postIndex, 1);  // 기존 위치에서 제거
+        postsData.posts.unshift(post);         // 배열 맨 앞에 추가
+
         fs.writeFile(postsFilePath, JSON.stringify(postsData, null, 2), (err) => {
             if (err) {
                 console.error("파일을 저장하는 중 오류가 발생했습니다:", err);
@@ -177,11 +210,11 @@ exports.editPost = (req, res) => {
         });
     });
 };
-// 게시물 등록
+
+//게시물 등록
 exports.addPost = (req, res) => {
     const { userId, title, content, date, imageUrl } = req.body;
 
-    // users.json 파일을 읽어 유저 정보 확인
     fs.readFile(usersFilePath, 'utf8', (err, userData) => {
         if (err) {
             console.error("유저 데이터를 읽는 중 오류가 발생했습니다:", err);
@@ -190,50 +223,25 @@ exports.addPost = (req, res) => {
 
         let users = [];
         try {
-            const parsedData = JSON.parse(userData); // JSON 파싱
-            console.log("파싱된 데이터:", parsedData); // 파싱된 데이터 확인
-            users = parsedData;  // 전체 객체가 배열이 아니라면 .users 로 접근하지 않음
+            users = JSON.parse(userData);
         } catch (parseError) {
             console.error("유저 데이터 파싱 중 오류 발생:", parseError);
             return res.status(500).json({ message: "데이터 파싱 오류", data: null });
         }
 
-        // 파싱 후 users가 undefined인지 확인
-        if (!users || users.length === 0) {
-            console.error("users 배열이 비어 있거나 정의되지 않았습니다.");
-            return res.status(404).json({ message: "사용자 데이터가 없습니다.", data: null });
-        }
-
-        // 유저 정보 찾기
         const author = users.find(user => user.userId === userId);
         if (!author) {
             return res.status(404).json({ message: "작성자 정보가 없습니다.", data: null });
         }
 
-        // 게시물 데이터 구성
-        const newPost = {
-            title,
-            content,
-            likes: 0,
-            views: 0,
-            commentsCnt: 0,
-            date,
-            imageUrl,
-            author: {
-                userId: author.userId,
-                nickname: author.nickname,
-                profileImg: author.profileImage // profileImage 필드를 수정
-            }
-        };
-
-        // posts.json 파일에 게시물 추가
-        const postsFilePath = path.join(__dirname, '../config/posts.json');
+        // 게시물 파일 읽기
         fs.readFile(postsFilePath, 'utf8', (err, postData) => {
             if (err) {
                 console.error("게시물 데이터를 읽는 중 오류가 발생했습니다:", err);
                 return res.status(500).json({ message: "서버 오류", data: null });
             }
 
+            // postsData 초기화
             let postsData = { posts: [] };
             try {
                 postsData = JSON.parse(postData);
@@ -241,15 +249,30 @@ exports.addPost = (req, res) => {
                 console.error("게시물 데이터 파싱 중 오류 발생:", parseError);
             }
 
-            // 기존 게시물 중 가장 큰 postId 찾기
-            const maxPostId = postsData.posts.length > 0
-                ? Math.max(...postsData.posts.map(post => post.postId))
-                : 0; // 게시물이 없으면 0으로 설정
+            // 새 게시물 ID 생성
+            const newPostId = postsData.posts.length > 0
+                ? Math.max(...postsData.posts.map(post => post.postId)) + 1
+                : 1;
 
-            // 새로운 postId는 기존 최대 postId + 1
-            newPost.postId = maxPostId + 1;
+            // 새로운 게시물 객체 생성
+            const newPost = {
+                postId: newPostId,
+                title,
+                content,
+                likes: 0,
+                views: 0,
+                commentsCnt: 0,
+                date,
+                imageUrl,
+                author: {
+                    userId: author.userId,
+                    nickname: author.nickname,
+                    profileImg: author.profileImage
+                }
+            };
 
-            postsData.posts.push(newPost);
+            // 새로운 게시물을 배열의 맨 앞에 추가
+            postsData.posts.unshift(newPost);
 
             // 수정된 데이터를 파일에 저장
             fs.writeFile(postsFilePath, JSON.stringify(postsData, null, 2), 'utf8', (err) => {
@@ -263,4 +286,6 @@ exports.addPost = (req, res) => {
         });
     });
 };
+
+
 
