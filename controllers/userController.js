@@ -9,20 +9,18 @@ const usersFilePath = path.join(__dirname, '../config/users.json'); // 사용자
 
 //로그아웃
 exports.logout = (req, res) => {
-    app.post('/logout', (req, res) => {
-        if (req.session) {
-            // 세션 삭제
-            req.session.destroy(err => {
-                if (err) {
-                    return res.status(500).json({ message: '로그아웃 실패' });
-                }
-                res.clearCookie('connect.sid'); // 세션 쿠키 제거
-                return res.status(200).json({ message: '로그아웃 성공' });
-            });
-        } else {
-            res.status(400).json({ message: '로그인 상태가 아닙니다.' });
-        }
-    });
+    if (req.session) {
+        // 세션 삭제
+        req.session.destroy(err => {
+            if (err) {
+                return res.status(500).json({ message: '로그아웃 실패' });
+            }
+            res.clearCookie('connect.sid'); // 세션 쿠키 제거
+            return res.status(200).json({ message: '로그아웃 성공' });
+        });
+    } else {
+        res.status(400).json({ message: '로그인 상태가 아닙니다.' });
+    }
 };
 
 //유저 회원 탈퇴
@@ -107,7 +105,7 @@ exports.editNickname = (req, res) => {
                 console.log("닉네임 수정\n");
                 console.log(req.session);
                 
-                res.status(200).json({ message: "닉네임 변경 성공", data: null });
+                res.status(200).json({ message: "닉네임 변경 성공", data: req.session.user });
             });
 
         } catch (parseErr) {
@@ -223,7 +221,7 @@ exports. editProfileImage = (req,res) => {
             
             return res.status(200).json({
                 message: "프로필 이미지 변경 성공",
-                data: null,
+                data: req.session.user,
             });
         });
     });

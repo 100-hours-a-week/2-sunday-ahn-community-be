@@ -14,11 +14,10 @@ const commentRoutes = require('./routers/commentRouter'); // commentsRouter 불�
 
 // cors정책에 막혀서 미들웨어 설정
 const cors = require('cors');
-const corsOptions = {
-    origin: true, // 여러 출처를 허용
-    credentials: true // 쿠키 포함
-};
-app.use(cors(corsOptions));
+app.use(cors({
+    origin: 'http://localhost:2000', // 클라이언트 URL
+    credentials: true,
+}));
 
 
 // 컨텐츠 보안 정책
@@ -59,7 +58,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        // httpOnly: true, // 클라이언트 자바스크립트에서 쿠키 접근 불가
+        httpOnly: true, // 클라이언트에서 세션 쿠키를 수정하지 못하도록 함
         secure: false,
         maxAge: 1000 * 60 * 60 * 24 // 쿠키 유효 기간 (1일)
     }
