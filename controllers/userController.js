@@ -91,7 +91,12 @@ exports.editNickname = (req, res) => {
                     console.error("파일을 쓰는 도중 오류 발생:", writeErr);
                     return res.status(500).json({ message: "서버에 오류가 발생했습니다.", data: null });
                 }
+                // 세션에 반영된 정보 업데이트
+                req.session.user.nickname = newNickname;
 
+                console.log("닉네임 수정\n");
+                console.log(req.session);
+                
                 res.status(200).json({ message: "닉네임 변경 성공", data: null });
             });
 
@@ -149,5 +154,67 @@ exports.editPassword = (req, res) => {
             console.error("JSON 파싱 오류 발생:", parseErr);
             res.status(500).json({ message: "서버에 오류가 발생했습니다.", data: null });
         }
+    });
+};
+
+//프로필 사진 변경
+exports. editProfileImage = (req,res) => {
+    const userId = parseInt(req.params.userId); // 요청으로부터 userId를 가져옴 (숫자로 변환)
+    const { newProfileImg } = req.body; // 요청 본문에서 새로운 프로필 이미지 URL 가져옴
+    console.log("이미지 변경 userId : ",userId);
+    // 사용자 데이터 파일 읽기
+    fs.readFile(usersFilePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error("파일 읽기 오류:", err);
+            return res.status(500).json({
+                message: "서버에 오류가 발생했습니다.",
+                data: null,
+            });
+        }
+
+        let usersData;
+        try {
+            usersData = JSON.parse(data); // JSON 파싱
+        } catch (parseError) {
+            console.error("JSON 파싱 오류:", parseError);
+            return res.status(500).json({
+                message: "서버에 오류가 발생했습니다.",
+                data: null,
+            });
+        }
+
+        // userId에 해당하는 사용자 찾기
+        const userIndex = usersData.findIndex(user => user.userId === userId);
+
+        if (userIndex === -1) {
+            return res.status(404).json({
+                message: "사용자를 찾을 수 없습니다.",
+                data: null,
+            });
+        }
+
+        // 새로운 프로필 이미지 URL로 업데이트
+        usersData[userIndex].profileImage = newProfileImg;
+
+        // 업데이트된 사용자 데이터를 파일에 저장
+        fs.writeFile(usersFilePath, JSON.stringify(usersData, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.error("파일 저장 오류:", err);
+                return res.status(500).json({
+                    message: "서버에 오류가 발생했습니다.",
+                    data: null,
+                });
+            }
+            // 세션에 반영된 정보 업데이트
+            req.session.user.profileImage = newProfileImg;
+            
+            console.log("프로필사진 수정\n");
+            console.log(req.session);
+            
+            return res.status(200).json({
+                message: "프로필 이미지 변경 성공",
+                data: null,
+            });
+        });
     });
 };

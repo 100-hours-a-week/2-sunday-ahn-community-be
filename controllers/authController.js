@@ -7,6 +7,26 @@ app.use(express.json()); // JSON 형식의 요청 본문을 파싱
 
 const usersFilePath = path.join(__dirname, '../config/users.json'); // 사용자 데이터 파일 경로
 
+
+// 사용자 정보 가져오는 엔드포인트
+exports.getUserInfo = (req, res) => {
+    if (req.session.user) {
+        // 세션에 저장된 사용자 정보를 반환
+        res.status(200).json({
+            isLogin: true,
+            data: req.session.user
+        });
+    } else {
+        // 세션에 정보가 없으면 에러 반환
+        res.status(401).json({
+            isLogin: false,
+            data: null
+        });
+    }
+    console.log("세션 전송")
+    console.log(req.session.user);
+};
+
 // 로그인 검증
 exports.login = (req, res) => {
     const { email, password } = req.body;
@@ -22,19 +42,23 @@ exports.login = (req, res) => {
         const user = users.find(user => user.email === email && user.password === password); // 이메일, 비밀번호 확인
 
         if (user) {
+            req.session.user = {
+                userId: user.userId,
+                email: user.email,
+                nickname: user.nickname,
+                profileImage: user.profileImage
+            };
+            console.log(req.session);
             res.status(200).json({ 
                 message: '로그인 성공', 
-                user: { 
-                    email: user.email, 
-                    nickname: user.nickname, 
-                    profileImage: user.profileImage 
-                } 
+                data: null
             });
         } else {
             res.status(401).json({ message: '*이메일 또는 비밀번호가 올바르지 않습니다.' });
         }
     });
 };
+
 
 // 회원가입 처리
 exports.regist = (req, res) => {

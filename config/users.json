@@ -1,37 +1,16 @@
 [
   {
-    "userId": 1,
-    "email": "asdf@qwer.com",
+    "email": "qwer@qwer.com",
     "password": "Qwer123!",
     "nickname": "sunday",
-    "profileImage": "sample.jpeg"
+    "profileImage": "http://localhost:2000/images/profile1731938136285.png",
+    "userId": 1
   },
   {
-    "userId": 2,
     "email": "asdf@asdf.com",
     "password": "Asdf123!",
-    "nickname": "hehe",
-    "profileImage": "http://localhost:2000/images/sample.jpeg"
-  },
-  {
-    "userId": 3,
-    "email": "haha@adf.com",
-    "password": "Asdf123!",
-    "nickname": "haha",
-    "profileImage": "http://localhost:2000/images/profile1730965486771.png"
-  },
-  {
-    "email": "qwe@qwe.com",
-    "password": "Qwer123!",
-    "nickname": "lastTester",
-    "profileImage": "http://localhost:2000/images/profile1731435915763.png",
-    "userId": 4
-  },
-  {
-    "email": "zxcv@zxcv.com",
-    "password": "Zxcv123!",
-    "nickname": "sun",
-    "profileImage": "http://localhost:2000/images/profile1731602850164.png",
-    "userId": 5
+    "nickname": "hey",
+    "profileImage": "http://localhost:2000/images/profile1731940009483.png",
+    "userId": 2
   }
 ]

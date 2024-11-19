@@ -1,64 +1,49 @@
 {
   "posts": [
     {
-      "postId": 4,
-      "title": "새로쓴거 최상단에 오나?",
-      "content": "맞으면좋겠는디",
+      "postId": 3,
+      "title": "왜 오류나는겨",
+      "content": "뭘까",
       "likes": 0,
-      "views": 4,
+      "views": 0,
       "commentsCnt": 0,
-      "date": "2024-11-15 02:13:30",
+      "date": "2024-11-19 09:46:13",
       "imageUrl": null,
       "author": {
         "userId": 1,
         "nickname": "sunday",
-        "profileImg": "sample.jpeg"
+        "profileImg": "http://localhost:2000/images/profile1731938136285.png"
       }
     },
     {
-      "title": "세번째 게시물 수정하면 위로가나?",
-      "content": "세번째",
+      "postId": 2,
+      "title": "hi",
+      "content": "hihi",
       "likes": 0,
-      "views": 4,
-      "commentsCnt": 1,
-      "date": "2024-11-15 02:11:06",
+      "views": 14,
+      "commentsCnt": 0,
+      "date": "2024-11-19 00:38:20",
       "imageUrl": null,
       "author": {
-        "userId": 1,
-        "nickname": "sunday",
-        "profileImg": "sample.jpeg"
-      },
-      "postId": 3
+        "userId": 2,
+        "nickname": "hey",
+        "profileImg": "http://localhost:2000/images/profile1731940009483.png"
+      }
     },
     {
-      "title": "첫번째 게시물",
-      "content": "첫번째",
+      "postId": 1,
+      "title": "asdf",
+      "content": "asdf",
       "likes": 0,
-      "views": 3,
-      "commentsCnt": 2,
-      "date": "2024-11-15 02:06:41",
+      "views": 1,
+      "commentsCnt": 0,
+      "date": "2024-11-19 00:37:57",
       "imageUrl": null,
       "author": {
         "userId": 1,
         "nickname": "sunday",
-        "profileImg": "sample.jpeg"
-      },
-      "postId": 1
-    },
-    {
-      "title": "두번째 게시물",
-      "content": "두번째",
-      "likes": 0,
-      "views": 4,
-      "commentsCnt": 1,
-      "date": "2024-11-15 02:06:58",
-      "imageUrl": null,
-      "author": {
-        "userId": 1,
-        "nickname": "sunday",
-        "profileImg": "sample.jpeg"
-      },
-      "postId": 2
+        "profileImg": "http://localhost:2000/images/profile1731938136285.png"
+      }
     }
   ]
 }

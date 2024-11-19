@@ -110,7 +110,7 @@ exports.deleteComment = (req, res) => {
 // 댓글 등록
 exports.addComment = (req, res) => {
     const { userId, postId, content, date } = req.body;
-
+    console.log("댓글 유저 ID : "+userId);
     if (!userId || !postId || !content || !date) {
         return res.status(400).json({ message: "필수 정보가 누락되었습니다.", data: null });
     }

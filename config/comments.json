@@ -1,48 +1,5 @@
 {
   "comments": [
-    {
-      "commentId": 1,
-      "postId": 1,
-      "content": "안녕하세요",
-      "author": {
-        "userId": 1,
-        "nickname": "sunday",
-        "profileImage": "sample.jpeg"
-      },
-      "date": "2024-11-15 02:07:20"
-    },
-    {
-      "commentId": 2,
-      "postId": 1,
-      "content": "반가워요 수정해봤어요",
-      "author": {
-        "userId": 1,
-        "nickname": "sunday",
-        "profileImage": "sample.jpeg"
-      },
-      "date": "2024-11-15 02:08:00"
-    },
-    {
-      "commentId": 3,
-      "postId": 2,
-      "content": "재미없어용",
-      "author": {
-        "userId": 1,
-        "nickname": "sunday",
-        "profileImage": "sample.jpeg"
-      },
-      "date": "2024-11-15 02:07:35"
-    },
-    {
-      "commentId": 4,
-      "postId": 3,
-      "content": "잘됐으면좋겠네요",
-      "author": {
-        "userId": 1,
-        "nickname": "sunday",
-        "profileImage": "sample.jpeg"
-      },
-      "date": "2024-11-15 02:07:45"
-    }
+    
   ]
 }
