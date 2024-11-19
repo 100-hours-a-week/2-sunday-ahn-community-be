@@ -7,12 +7,22 @@ app.use(express.json()); // JSON 형식의 요청 본문을 파싱
 
 const usersFilePath = path.join(__dirname, '../config/users.json'); // 사용자 데이터 파일 경로
 
-// NOTE : 임시임. 나중에 처리 필요
+//로그아웃
 exports.logout = (req, res) => {
-    // 여기에 로그아웃 처리 로직(세션 제거)을 추가
-    
-        res.status(200).json({ message: '로그아웃 성공' });
-
+    app.post('/logout', (req, res) => {
+        if (req.session) {
+            // 세션 삭제
+            req.session.destroy(err => {
+                if (err) {
+                    return res.status(500).json({ message: '로그아웃 실패' });
+                }
+                res.clearCookie('connect.sid'); // 세션 쿠키 제거
+                return res.status(200).json({ message: '로그아웃 성공' });
+            });
+        } else {
+            res.status(400).json({ message: '로그인 상태가 아닙니다.' });
+        }
+    });
 };
 
 //유저 회원 탈퇴

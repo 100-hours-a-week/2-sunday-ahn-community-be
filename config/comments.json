@@ -1,5 +1,59 @@
 {
   "comments": [
-    
+    {
+      "commentId": 1,
+      "postId": 2,
+      "content": "오!12345",
+      "author": {
+        "userId": 2,
+        "nickname": "hey",
+        "profileImg": "http://localhost:2000/images/profile1731940009483.png"
+      },
+      "date": "2024-11-11 02:24:24"
+    },
+    {
+      "commentId": 2,
+      "postId": 2,
+      "content": "흥미롭네요.",
+      "author": {
+        "userId": 3,
+        "nickname": "sunny",
+        "profileImg": "http://localhost:2000/images/profile1731980898375.png"
+      },
+      "date": "2021-01-01 02:00:00"
+    },
+    {
+      "commentId": 3,
+      "postId": 3,
+      "content": "흥미",
+      "author": {
+        "userId": 3,
+        "nickname": "sunny",
+        "profileImg": "http://localhost:2000/images/profile1731980898375.png"
+      },
+      "date": "2021-01-01 02:00:00"
+    },
+    {
+      "commentId": 4,
+      "postId": 3,
+      "content": "롭",
+      "author": {
+        "userId": 3,
+        "nickname": "sunny",
+        "profileImg": "http://localhost:2000/images/profile1731980898375.png"
+      },
+      "date": "2021-01-01 02:00:00"
+    },
+    {
+      "commentId": 5,
+      "postId": 3,
+      "content": "네요.",
+      "author": {
+        "userId": 3,
+        "nickname": "sunny",
+        "profileImg": "http://localhost:2000/images/profile1731980898375.png"
+      },
+      "date": "2021-01-01 02:00:00"
+    }
   ]
 }

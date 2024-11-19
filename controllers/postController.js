@@ -80,7 +80,6 @@ exports.getPost = (req, res) => {
                         comments: postComments
                     }
                 };
-
                 // 성공적으로 상세 조회 결과 전송
                 return res.status(200).json(response);
             });

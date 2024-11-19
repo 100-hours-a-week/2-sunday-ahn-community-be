@@ -1,12 +1,27 @@
 {
   "posts": [
     {
+      "postId": 4,
+      "title": "qwer",
+      "content": "qwer",
+      "likes": 0,
+      "views": 5,
+      "commentsCnt": 0,
+      "date": "2024-11-19 17:39:08",
+      "imageUrl": null,
+      "author": {
+        "userId": 1,
+        "nickname": "sunday",
+        "profileImg": "http://localhost:2000/images/profile1731982354429.png"
+      }
+    },
+    {
       "postId": 3,
       "title": "왜 오류나는겨",
       "content": "뭘까",
       "likes": 0,
-      "views": 0,
-      "commentsCnt": 0,
+      "views": 13,
+      "commentsCnt": 3,
       "date": "2024-11-19 09:46:13",
       "imageUrl": null,
       "author": {
@@ -20,29 +35,14 @@
       "title": "hi",
       "content": "hihi",
       "likes": 0,
-      "views": 14,
-      "commentsCnt": 0,
+      "views": 23,
+      "commentsCnt": 2,
       "date": "2024-11-19 00:38:20",
       "imageUrl": null,
       "author": {
         "userId": 2,
         "nickname": "hey",
         "profileImg": "http://localhost:2000/images/profile1731940009483.png"
-      }
-    },
-    {
-      "postId": 1,
-      "title": "asdf",
-      "content": "asdf",
-      "likes": 0,
-      "views": 1,
-      "commentsCnt": 0,
-      "date": "2024-11-19 00:37:57",
-      "imageUrl": null,
-      "author": {
-        "userId": 1,
-        "nickname": "sunday",
-        "profileImg": "http://localhost:2000/images/profile1731938136285.png"
       }
     }
   ]
