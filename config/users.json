@@ -1,14 +1,16 @@
 [
   {
-    "email": "asdf@qwer.com",
-    "password": "Rkawk123!",
+    "email": "qwer@qwer.com",
+    "password": "Qwer123!",
     "nickname": "sunday",
-    "profileImage": "1730337903227-242877479.png"
+    "profileImage": "http://localhost:2000/images/profile1732066882307.png",
+    "userId": 1
   },
   {
     "email": "asdf@asdf.com",
     "password": "Asdf123!",
-    "nickname": "p",
-    "profileImage": "1730349595462-350346841.png"
+    "nickname": "ahn",
+    "profileImage": "http://localhost:2000/images/profile1732066910084.png",
+    "userId": 2
   }
 ]
