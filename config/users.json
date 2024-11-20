@@ -3,21 +3,14 @@
     "email": "qwer@qwer.com",
     "password": "Qwer123!",
     "nickname": "sunday",
-    "profileImage": "http://localhost:2000/images/profile1731982354429.png",
+    "profileImage": "http://localhost:2000/images/profile1732066882307.png",
     "userId": 1
   },
   {
     "email": "asdf@asdf.com",
     "password": "Asdf123!",
-    "nickname": "hey",
-    "profileImage": "http://localhost:2000/images/profile1731940009483.png",
+    "nickname": "ahn",
+    "profileImage": "http://localhost:2000/images/profile1732066910084.png",
     "userId": 2
-  },
-  {
-    "email": "zxcv@zxcv.com",
-    "password": "Zxcv123!",
-    "nickname": "sunny",
-    "profileImage": "http://localhost:2000/images/profile1731980898375.png",
-    "userId": 3
   }
 ]

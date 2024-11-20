@@ -262,7 +262,7 @@ exports.addPost = (req, res) => {
                 views: 0,
                 commentsCnt: 0,
                 date,
-                imageUrl,
+                imageUrl : imageUrl,
                 author: {
                     userId: author.userId,
                     nickname: author.nickname,
