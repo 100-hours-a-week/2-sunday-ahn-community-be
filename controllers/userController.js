@@ -17,6 +17,7 @@ export const logout = (req, res) => {
     }
 };
 
+// 회원탈퇴
 export const withdrawUser = async (req, res) => {
     const userId = parseInt(req.params.userId); 
 
