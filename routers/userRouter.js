@@ -3,7 +3,7 @@ import { logout,
         withdrawUser, 
         editProfileImage,
         editNickname, 
-        editPassword } from '../controllers/userController';
+        editPassword } from '../controllers/userController.js';
 
 const router = express.Router();
 

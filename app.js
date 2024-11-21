@@ -9,7 +9,7 @@ import moment from "moment";
 import "colors";
 
 import db from "./config/database.js"
-// import userRoutes from './routers/userRouter.js';
+import userRoutes from './routers/userRouter.js';
 // import postRoutes from './routers/postRouter.js';
 // import commentRoutes from './routers/commentRouter.js';
 import commonRoutes from './routers/commonRouter.js';
@@ -106,7 +106,7 @@ app.get("/users", (req, res) => {
 
 // 라우팅 설정
 app.use('/auth', commonRoutes);
-// app.use('/users', userRoutes);
+app.use('/users', userRoutes);
 // app.use('/posts', postRoutes);
 // app.use('/comments', commentRoutes);
 
