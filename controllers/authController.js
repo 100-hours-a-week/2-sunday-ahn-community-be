@@ -14,7 +14,7 @@ export const getUserInfo = (req, res) => {
         });
     } else {
         // 세션에 정보가 없으면 에러 반환
-        res.status(401).json({
+        res.status(400).json({
             isLogin: false,
             data: null
         });
