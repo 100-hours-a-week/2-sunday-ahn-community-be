@@ -9,10 +9,10 @@ import moment from "moment";
 import "colors";
 
 import db from "./config/database.js"
-import userRoutes from './routers/userRouter.js';
-import postRoutes from './routers/postRouter.js';
+// import userRoutes from './routers/userRouter.js';
+// import postRoutes from './routers/postRouter.js';
+// import commentRoutes from './routers/commentRouter.js';
 import commonRoutes from './routers/commonRouter.js';
-import commentRoutes from './routers/commentRouter.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -89,21 +89,26 @@ const authMiddleware = (req, res, next) => {
 
 app.use(authMiddleware);
 
+// 사용자 조회 API
+app.get("/users", (req, res) => {
+    const sqlQuery = "SELECT * FROM user";
+    logQuery(sqlQuery);
 
-db.query(sqlQuery, (err, results) => {
-    if (err) {
-        console.error("쿼리 실행 오류:".red, err);
-        res.status(500).send("서버 오류");
-        return;
-    }
-    res.json(results);
+    db.query(sqlQuery, (err, results) => {
+        if (err) {
+            console.error("쿼리 실행 오류:".red, err);
+            res.status(500).send("서버 오류");
+            return;
+        }
+        res.json(results);
+    });
 });
 
 // 라우팅 설정
 app.use('/auth', commonRoutes);
-app.use('/users', userRoutes);
-app.use('/posts', postRoutes);
-app.use('/comments', commentRoutes);
+// app.use('/users', userRoutes);
+// app.use('/posts', postRoutes);
+// app.use('/comments', commentRoutes);
 
 // 서버 실행
 app.listen(PORT, () => {

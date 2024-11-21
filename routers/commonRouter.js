@@ -3,7 +3,7 @@ import { login,
         regist, 
         getUserInfo, 
         emailCheck, 
-        nicknameCheck } from '../controllers/authController';
+        nicknameCheck } from '../controllers/authController.js';
 
 const router = express.Router();
 

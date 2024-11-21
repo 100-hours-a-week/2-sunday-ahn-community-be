@@ -1,17 +1,17 @@
-const db = require('../config/database');
+import db from '../config/database.js';
 
 const User = {
-    // // 모든 사용자 가져오기
-    // getAllUsers: (callback) => {
-    //     db.query('SELECT * FROM User', (error, results) => {
-    //         if (error) {
-    //             return callback(error, null);
-    //         }
-    //         callback(null, results);
-    //     });
-    // },
+    // 모든 사용자 가져오기
+    getAllUsers: (callback) => {
+        db.query('SELECT * FROM User', (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results);
+        });
+    },
 
-     // 사용자 추가하기
+    // 사용자 추가하기
     createUser: (email, password, nickname, profile_image, callback) => {
         const query = 'INSERT INTO User (email, password, nickname, profile_image) VALUES (?, ?, ?, ?)';
         db.query(query, [email, password, nickname, profile_image], (error, results) => {
@@ -22,13 +22,35 @@ const User = {
         });
     },
 
-    // 특정 사용자 가져오기
+    // 특정 사용자 가져오기 (ID 기반)
     getUserById: (user_id, callback) => {
         db.query('SELECT * FROM User WHERE user_id = ?', [user_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
             callback(null, results[0]);
+        });
+    },
+
+    // 이메일로 사용자 조회
+    getUserByEmail: (email, callback) => {
+        const query = 'SELECT * FROM User WHERE email = ?';
+        db.query(query, [email], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results[0]); // 이메일에 해당하는 첫 번째 사용자 반환
+        });
+    },
+
+    // 닉네임으로 사용자 조회
+    getUserByNickname: (nickname, callback) => {
+        const query = 'SELECT * FROM User WHERE nickname = ?';
+        db.query(query, [nickname], (error, results) => {
+            if (error) {
+                return callback(error, null);
+            }
+            callback(null, results[0]); // 닉네임에 해당하는 첫 번째 사용자 반환
         });
     },
 
@@ -54,4 +76,4 @@ const User = {
     }
 };
 
-module.exports = User;
+export default User;
