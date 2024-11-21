@@ -12,9 +12,9 @@ const Post = {
     },
 
     // 게시물 추가하기
-    createPost: (title, content, likes, views, date, img_url, user_id, callback) => {
-        const query = 'INSERT INTO Post (title, content, likes, views, date, img_url, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        db.query(query, [title, content, likes, views, date, img_url, user_id], (error, results) => {
+    createPost: (user_id, title, content, likes, views, comments_cnt, date, image_url, callback) => {
+        const query = 'INSERT INTO Post (user_id, title, content, likes, views, comments_cnt, date, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+        db.query(query, [user_id, title, content, likes, views, comments_cnt, date, image_url], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
@@ -23,8 +23,8 @@ const Post = {
     },
 
     // 특정 게시물 가져오기
-    getPostById: (id, callback) => {
-        db.query('SELECT * FROM Post WHERE id = ?', [id], (error, results) => {
+    getPostById: (post_id, callback) => {
+        db.query('SELECT * FROM Post WHERE post_id = ?', [post_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
@@ -33,9 +33,9 @@ const Post = {
     },
 
     // 게시물 수정하기
-    updatePost: (id, title, content, likes, views, date, img_url, user_id, callback) => {
-        const query = 'UPDATE Post SET title = ?, content = ?, likes = ?, views = ?, date = ?, img_url = ?, user_id = ? WHERE id = ?';
-        db.query(query, [title, content, likes, views, date, img_url, user_id, id], (error, results) => {
+    updatePost: (post_id, user_id, title, content, likes, views, comments_cnt, date, image_url, callback) => {
+        const query = 'UPDATE Post SET user_id = ?, title = ?, content = ?, likes = ?, views = ?, comments_cnt = ?, date = ?, image_url = ? WHERE post_id = ?';
+        db.query(query, [user_id, title, content, likes, views, comments_cnt, date, image_url, post_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
@@ -44,8 +44,8 @@ const Post = {
     },
 
     // 게시물 삭제하기
-    deletePost: (id, callback) => {
-        db.query('DELETE FROM Post WHERE id = ?', [id], (error, results) => {
+    deletePost: (post_id, callback) => {
+        db.query('DELETE FROM Post WHERE post_id = ?', [post_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }

@@ -5,6 +5,11 @@
 
 ### 작업현황<br>
 
+
+### 1주차와 비교<br>
+- date를 DB에 데이터가 도착했을 때 설정
+- author의 정보들을 받는것을 작성자의 userId로 조회하여 나머지 nickname, profileImage 조회
+
 #### GET
 - [x] /users/logout/{userId} 유저 로그아웃
 - [x] /posts/{postId} 게시물 상세조회
@@ -32,5 +37,5 @@
 - [x] /comments/{commentId} 댓글삭제
 - [x] /posts/{postId} 게시물 삭제
 
-# ‼️주의<br>
-communityFE와 같이 실행해야합니다!
+# 실행방법<br>
+npm start

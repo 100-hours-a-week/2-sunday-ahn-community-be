@@ -1,45 +1,29 @@
-require("dotenv").config();
-const express = require("express");
-const mysql = require("mysql2");
-const moment = require("moment");
-const colors = require("colors");
+import express from "express";
+import moment from "moment";
+import "colors";
+import db from "./config/database.js"
 
 const app = express();
 const port = 3000;
 
-// MySQL 연결 설정
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-});
-
-db.connect((err) => {
-    if (err) {
-        console.error("Database connection failed:".red, err);
-        return;
-    }
-    console.log("Database connected!".green);
-});
-
-// 미들웨어 - 요청 시 SQL 쿼리와 시간을 로그로 출력
+// 미들웨어 - SQL 쿼리 로그 출력
 const logQuery = (sqlQuery) => {
     const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
     console.log(`[${currentTime.yellow}] ${sqlQuery.blue}`);
 };
 
+// 사용자 조회 API
 app.get("/users", (req, res) => {
-  const sqlQuery = "SELECT * FROM user";
-  logQuery(sqlQuery); // SQL 쿼리와 요청 시간을 콘솔에 출력
+    const sqlQuery = "SELECT * FROM user";
+    logQuery(sqlQuery);
 
-db.query(sqlQuery, (err, results) => {
-    if (err) {
-        console.error("Error executing query:".red, err);
-        res.status(500).send("Server Error");
-        return;
-    }
-    res.json(results);
+    db.query(sqlQuery, (err, results) => {
+        if (err) {
+            console.error("쿼리 실행 오류:".red, err);
+            res.status(500).send("서버 오류");
+            return;
+        }
+        res.json(results);
     });
 });
 

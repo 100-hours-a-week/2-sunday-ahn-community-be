@@ -23,8 +23,8 @@ const Comment = {
     },
 
     // 특정 댓글 가져오기
-    getCommentById: (id, callback) => {
-        db.query('SELECT * FROM Comment WHERE id = ?', [id], (error, results) => {
+    getCommentById: (comment_id, callback) => {
+        db.query('SELECT * FROM Comment WHERE comment_id = ?', [comment_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
@@ -33,9 +33,9 @@ const Comment = {
     },
 
     // 댓글 수정하기
-    updateComment: (id, user_id, post_id, content, date, callback) => {
-        const query = 'UPDATE Comment SET user_id = ?, post_id = ?, content = ?, date = ? WHERE id = ?';
-        db.query(query, [user_id, post_id, content, date, id], (error, results) => {
+    updateComment: (comment_id, user_id, post_id, content, date, callback) => {
+        const query = 'UPDATE Comment SET user_id = ?, post_id = ?, content = ?, date = ? WHERE comment_id = ?';
+        db.query(query, [user_id, post_id, content, date, comment_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
@@ -44,8 +44,8 @@ const Comment = {
     },
 
     // 댓글 삭제하기
-    deleteComment: (id, callback) => {
-        db.query('DELETE FROM Comment WHERE id = ?', [id], (error, results) => {
+    deleteComment: (comment_id, callback) => {
+        db.query('DELETE FROM Comment WHERE comment_id = ?', [comment_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }

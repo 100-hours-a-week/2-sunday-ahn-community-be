@@ -11,10 +11,10 @@ const User = {
     //     });
     // },
 
-    // 사용자 추가하기
-    createUser: (email, password, nickname, callback) => {
-        const query = 'INSERT INTO User (email, password, nickname) VALUES (?, ?, ?)';
-        db.query(query, [email, password, nickname], (error, results) => {
+     // 사용자 추가하기
+    createUser: (email, password, nickname, profile_image, callback) => {
+        const query = 'INSERT INTO User (email, password, nickname, profile_image) VALUES (?, ?, ?, ?)';
+        db.query(query, [email, password, nickname, profile_image], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
@@ -23,8 +23,8 @@ const User = {
     },
 
     // 특정 사용자 가져오기
-    getUserById: (id, callback) => {
-        db.query('SELECT * FROM User WHERE id = ?', [id], (error, results) => {
+    getUserById: (user_id, callback) => {
+        db.query('SELECT * FROM User WHERE user_id = ?', [user_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
@@ -33,9 +33,9 @@ const User = {
     },
 
     // 사용자 수정하기
-    updateUser: (id, email, password, nickname, callback) => {
-        const query = 'UPDATE User SET email = ?, password = ?, nickname = ? WHERE id = ?';
-        db.query(query, [email, password, nickname, id], (error, results) => {
+    updateUser: (user_id, email, password, nickname, profile_image, callback) => {
+        const query = 'UPDATE User SET email = ?, password = ?, nickname = ?, profile_image = ? WHERE user_id = ?';
+        db.query(query, [email, password, nickname, profile_image, user_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }
@@ -44,8 +44,8 @@ const User = {
     },
 
     // 사용자 삭제하기
-    deleteUser: (id, callback) => {
-        db.query('DELETE FROM User WHERE id = ?', [id], (error, results) => {
+    deleteUser: (user_id, callback) => {
+        db.query('DELETE FROM User WHERE user_id = ?', [user_id], (error, results) => {
             if (error) {
                 return callback(error, null);
             }

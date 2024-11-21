@@ -1,11 +1,16 @@
-const express = require('express');
-const userController = require('../controllers/userController');
+import express from 'express';
+import { logout,
+        withdrawUser, 
+        editProfileImage,
+        editNickname, 
+        editPassword } from '../controllers/userController';
+
 const router = express.Router();
 
-router.post('/logout', userController.logout);
-router.delete('/withdraw/:userId', userController.withdrawUser);
-router.put('/profileImg/:userId', userController.editProfileImage)
-router.patch('/nickname/:userId', userController.editNickname);
-router.patch('/password/:userId', userController.editPassword);
+router.post('/logout', logout);
+router.delete('/withdraw/:userId', withdrawUser);
+router.put('/profileImg/:userId', editProfileImage);
+router.patch('/nickname/:userId', editNickname);
+router.patch('/password/:userId', editPassword);
 
-module.exports = router;
+export default router;
