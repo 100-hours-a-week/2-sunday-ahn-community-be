@@ -3,7 +3,7 @@ import { getPostsList,
         getPost, 
         deletePost, 
         editPost, 
-        addPost } from '../controllers/postController';
+        addPost } from '../controllers/postController.js';
 
 const router = express.Router();
 

@@ -2,77 +2,77 @@ import db from '../config/database.js';
 
 const User = {
     // 모든 사용자 가져오기
-    getAllUsers: (callback) => {
-        db.query('SELECT * FROM User', (error, results) => {
-            if (error) {
-                return callback(error, null);
-            }
-            callback(null, results);
-        });
+    getAllUsers: async () => {
+        try {
+            const [results] = await db.promise().query('SELECT * FROM User');
+            return results;
+        } catch (error) {
+            throw error;
+        }
     },
 
     // 사용자 추가하기
-    createUser: (email, password, nickname, profile_image, callback) => {
+    createUser: async (email, password, nickname, profile_image) => {
         const query = 'INSERT INTO User (email, password, nickname, profile_image) VALUES (?, ?, ?, ?)';
-        db.query(query, [email, password, nickname, profile_image], (error, results) => {
-            if (error) {
-                return callback(error, null);
-            }
-            callback(null, results.insertId);
-        });
+        try {
+            const [results] = await db.promise().query(query, [email, password, nickname, profile_image]);
+            return results.insertId;
+        } catch (error) {
+            throw error;
+        }
     },
 
     // 특정 사용자 가져오기 (ID 기반)
-    getUserById: (user_id, callback) => {
-        db.query('SELECT * FROM User WHERE user_id = ?', [user_id], (error, results) => {
-            if (error) {
-                return callback(error, null);
-            }
-            callback(null, results[0]);
-        });
+    getUserById: async (user_id) => {
+        try {
+            const [results] = await db.promise().query('SELECT * FROM User WHERE user_id = ?', [user_id]);
+            return results[0];
+        } catch (error) {
+            throw error;
+        }
     },
 
     // 이메일로 사용자 조회
-    getUserByEmail: (email, callback) => {
+    getUserByEmail: async (email) => {
         const query = 'SELECT * FROM User WHERE email = ?';
-        db.query(query, [email], (error, results) => {
-            if (error) {
-                return callback(error, null);
-            }
-            callback(null, results[0]); // 이메일에 해당하는 첫 번째 사용자 반환
-        });
+        try {
+            const [results] = await db.promise().query(query, [email]);
+            return results[0]; // 이메일에 해당하는 첫 번째 사용자 반환
+        } catch (error) {
+            throw error;
+        }
     },
 
     // 닉네임으로 사용자 조회
-    getUserByNickname: (nickname, callback) => {
+    getUserByNickname: async (nickname) => {
         const query = 'SELECT * FROM User WHERE nickname = ?';
-        db.query(query, [nickname], (error, results) => {
-            if (error) {
-                return callback(error, null);
-            }
-            callback(null, results[0]); // 닉네임에 해당하는 첫 번째 사용자 반환
-        });
+        try {
+            const [results] = await db.promise().query(query, [nickname]);
+            return results[0]; // 닉네임에 해당하는 첫 번째 사용자 반환
+        } catch (error) {
+            throw error;
+        }
     },
 
     // 사용자 수정하기
-    updateUser: (user_id, email, password, nickname, profile_image, callback) => {
+    updateUser: async (user_id, email, password, nickname, profile_image) => {
         const query = 'UPDATE User SET email = ?, password = ?, nickname = ?, profile_image = ? WHERE user_id = ?';
-        db.query(query, [email, password, nickname, profile_image, user_id], (error, results) => {
-            if (error) {
-                return callback(error, null);
-            }
-            callback(null, results.affectedRows);
-        });
+        try {
+            const [results] = await db.promise().query(query, [email, password, nickname, profile_image, user_id]);
+            return results.affectedRows;
+        } catch (error) {
+            throw error;
+        }
     },
 
     // 사용자 삭제하기
-    deleteUser: (user_id, callback) => {
-        db.query('DELETE FROM User WHERE user_id = ?', [user_id], (error, results) => {
-            if (error) {
-                return callback(error, null);
-            }
-            callback(null, results.affectedRows);
-        });
+    deleteUser: async (user_id) => {
+        try {
+            const [results] = await db.promise().query('DELETE FROM User WHERE user_id = ?', [user_id]);
+            return results.affectedRows;
+        } catch (error) {
+            throw error;
+        }
     }
 };
 

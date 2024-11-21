@@ -20,7 +20,6 @@ export const getUserInfo = (req, res) => {
         });
     }
     console.log("세션 전송");
-    console.log(req.session.user);
 };
 
 // 로그인 검증
@@ -28,12 +27,8 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await new Promise((resolve, reject) => {
-            User.getUserByEmail(email, (error, result) => {
-                if (error) reject(error);
-                resolve(result);
-            });
-        });
+        // 이메일로 사용자 정보 조회
+        const user = await User.getUserByEmail(email);
 
         if (user && user.password === password) {
             req.session.user = {
@@ -61,37 +56,20 @@ export const regist = async (req, res) => {
 
     try {
         // 이메일 중복 검사
-        const emailExists = await new Promise((resolve, reject) => {
-            User.getUserByEmail(email, (error, result) => {
-                if (error) reject(error);
-                resolve(result);
-            });
-        });
-
+        const emailExists = await User.getUserByEmail(email);
         if (emailExists) {
             return res.status(401).json({ message: "*중복된 이메일입니다", data: null });
         }
 
         // 닉네임 중복 검사
-        const nicknameExists = await new Promise((resolve, reject) => {
-            User.getUserByNickname(nickname, (error, result) => {
-                if (error) reject(error);
-                resolve(result);
-            });
-        });
-
+        const nicknameExists = await User.getUserByNickname(nickname);
         if (nicknameExists) {
             return res.status(402).json({ message: "*중복된 닉네임입니다", data: null });
         }
 
         // 새로운 사용자 추가
-        await new Promise((resolve, reject) => {
-            User.createUser(email, password, nickname, profileImage, (error, result) => {
-                if (error) reject(error);
-                resolve(result);
-            });
-        });
-
+        await User.createUser(email, password, nickname, profileImage);
+        console.log("회원가입");
         res.status(200).json({ message: "회원가입이 성공적으로 완료되었습니다!", data: null });
     } catch (error) {
         console.error('회원가입 오류:', error);
@@ -111,12 +89,7 @@ export const emailCheck = async (req, res) => {
     }
 
     try {
-        const emailExists = await new Promise((resolve, reject) => {
-            User.getUserByEmail(email, (error, result) => {
-                if (error) reject(error);
-                resolve(result);
-            });
-        });
+        const emailExists = await User.getUserByEmail(email);
 
         if (emailExists) {
             return res.status(401).json({
@@ -150,12 +123,7 @@ export const nicknameCheck = async (req, res) => {
     }
 
     try {
-        const nicknameExists = await new Promise((resolve, reject) => {
-            User.getUserByNickname(nickname, (error, result) => {
-                if (error) reject(error);
-                resolve(result);
-            });
-        });
+        const nicknameExists = await User.getUserByNickname(nickname);
 
         if (nicknameExists) {
             return res.status(401).json({
