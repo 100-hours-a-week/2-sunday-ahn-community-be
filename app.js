@@ -17,13 +17,6 @@ import commonRoutes from './routers/commonRouter.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
-// 미들웨어 - SQL 쿼리 로그 출력
-const logQuery = (sqlQuery) => {
-    const currentTime = moment().format("YYYY-MM-DD HH:mm:ss");
-    console.log(`[${currentTime.yellow}] ${sqlQuery.blue}`);
-};
-
 // CORS 정책 설정
 app.use(cors({
     origin: 'http://localhost:2000', // 클라이언트 URL
@@ -88,21 +81,6 @@ const authMiddleware = (req, res, next) => {
 };
 
 app.use(authMiddleware);
-
-// 사용자 조회 API
-app.get("/users", (req, res) => {
-    const sqlQuery = "SELECT * FROM user";
-    logQuery(sqlQuery);
-
-    db.query(sqlQuery, (err, results) => {
-        if (err) {
-            console.error("쿼리 실행 오류:".red, err);
-            res.status(500).send("서버 오류");
-            return;
-        }
-        res.json(results);
-    });
-});
 
 // 라우팅 설정
 app.use('/auth', commonRoutes);
