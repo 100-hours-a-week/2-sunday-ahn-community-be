@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../models/User.js'; // User 모델을 사용
+import bcrypt from 'bcrypt';
 const app = express();
 
 app.use(express.json()); // JSON 형식의 요청 본문을 파싱
@@ -30,20 +31,24 @@ export const login = async (req, res) => {
         // 이메일로 사용자 정보 조회
         const user = await User.getUserByEmail(email);
 
-        if (user && user.password === password) {
-            req.session.user = {
-                userId: user.user_id,
-                email: user.email,
-                nickname: user.nickname,
-                profileImage: user.profile_image
-            };
-            res.status(200).json({
-                message: '로그인 성공',
-                data: null
-            });
-        } else {
-            res.status(401).json({ message: '*이메일 또는 비밀번호가 올바르지 않습니다.' });
+        // 비밀번호 검증
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: "*이메일 또는 비밀번호가 올바르지 않습니다." });
         }
+
+        // 로그인 성공: 세션에 사용자 정보 저장
+        req.session.user = {
+            userId: user.user_id,
+            email: user.email,
+            nickname: user.nickname,
+            profileImage: user.profile_image
+        };
+
+        res.status(200).json({
+            message: '로그인 성공',
+            data: null
+        });
     } catch (error) {
         console.error('로그인 오류:', error);
         res.status(500).json({ message: '서버 오류가 발생했습니다.' });
@@ -67,8 +72,12 @@ export const regist = async (req, res) => {
             return res.status(402).json({ message: "*중복된 닉네임입니다", data: null });
         }
 
+        // 비밀번호 암호화
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
         // 새로운 사용자 추가
-        await User.createUser(email, password, nickname, profileImage);
+        await User.createUser(email, hashedPassword, nickname, profileImage); // 암호화된 비밀번호 사용
         console.log("회원가입");
         res.status(200).json({ message: "회원가입이 성공적으로 완료되었습니다!", data: null });
     } catch (error) {

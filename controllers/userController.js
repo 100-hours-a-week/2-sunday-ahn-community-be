@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import Post from '../models/Post.js';
 import Comment from '../models/Comment.js';
+import bcrypt from 'bcrypt';
 
 // 로그아웃
 export const logout = (req, res) => {
@@ -110,7 +111,10 @@ export const editPassword = async (req, res) => {
 
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,20}$/;
     if (!passwordPattern.test(newPassword)) {
-        return res.status(400).json({ message: "*비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 포함해야 합니다.", data: null });
+        return res.status(400).json({
+            message: "*비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 포함해야 합니다.",
+            data: null
+        });
     }
 
     try {
@@ -120,12 +124,17 @@ export const editPassword = async (req, res) => {
             return res.status(404).json({ message: "사용자를 찾을 수 없습니다.", data: null });
         }
 
-        // 변경된 필드만 업데이트
-        const affectedRows = await User.updateUser(userId, user.email, newPassword, user.nickname, user.profile_image);
+        // 비밀번호 암호화
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        // 비밀번호 업데이트
+        const affectedRows = await User.updateUser(userId, user.email, hashedPassword, user.nickname, user.profile_image);
         if (affectedRows === 0) {
             return res.status(404).json({ message: "사용자를 찾을 수 없습니다.", data: null });
         }
-        console.log("비밀번호 변경");
+
+        console.log("비밀번호 변경 성공");
         return res.status(200).json({ message: "비밀번호 변경 성공", data: null });
     } catch (err) {
         console.error("데이터베이스 오류:", err);
