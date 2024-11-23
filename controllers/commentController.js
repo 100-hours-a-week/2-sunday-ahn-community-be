@@ -1,193 +1,129 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
+import Comment from '../models/Comment.js';
+import Post from '../models/Post.js';
+import User from '../models/User.js';
 
-const app = express();
-app.use(express.json()); // JSON 형식의 요청 본문을 파싱
+// 댓글 추가
+export const addComment = async (req, res) => {
+    const { userId, postId, content } = req.body;
 
-const postsFilePath = path.join(__dirname, '../config/posts.json'); // 게시물 데이터 파일 경로
-const commentsFilePath = path.join(__dirname, '../config/comments.json'); // 댓글 데이터 파일 경로
-const usersFilePath = path.join(__dirname, '../config/users.json'); // 유저 데이터 파일 경로
-
-// 댓글 수정
-exports.editComment = ('/:commentId', (req, res) => {
-    const commentId = parseInt(req.params.commentId);  // URL 파라미터에서 댓글 ID를 가져옴
-    const { newComment, date } = req.body;  // 요청 본문에서 댓글 수정에 필요한 데이터 받기
-
-    // 댓글 데이터 파일을 읽어옴
-    fs.readFile(commentsFilePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error("파일 읽기 오류:", err);
-            return res.status(500).json({ message: "서버 오류", data: null });
-        }
-
-        let commentsData = JSON.parse(data);  // JSON 파싱
-
-        // 해당 댓글을 찾음
-        const commentIndex = commentsData.comments.findIndex(comment => comment.commentId === commentId);
-
-        if (commentIndex === -1) {
-            return res.status(404).json({ message: "해당 댓글을 찾을 수 없습니다.", data: null });
-        }
-
-        const comment = commentsData.comments[commentIndex];
-
-        // 댓글 내용과 수정 일자를 업데이트
-        comment.content = newComment;
-        comment.date = date;
-
-        // 수정된 댓글 데이터를 다시 파일에 저장
-        fs.writeFile(commentsFilePath, JSON.stringify(commentsData, null, 2), 'utf8', (err) => {
-            if (err) {
-                console.error("파일 저장 오류:", err);
-                return res.status(500).json({ message: "서버 오류", data: null });
-            }
-
-            // 수정된 댓글 응답
-            return res.status(200).json({ message: "댓글 수정 성공", data: comment });
-        });
-    });
-});
-
-// 댓글 삭제
-exports.deleteComment = (req, res) => {
-    const commentId = parseInt(req.params.commentId);
-
-    fs.readFile(commentsFilePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error("파일 읽기 오류:", err);
-            return res.status(500).json({ message: "서버 오류", data: null });
-        }
-
-        let commentsData = JSON.parse(data);
-
-        const commentIndex = commentsData.comments.findIndex(comment => comment.commentId === commentId);
-
-        if (commentIndex === -1) {
-            return res.status(404).json({ message: "해당 댓글을 찾을 수 없습니다.", data: null });
-        }
-
-        const comment = commentsData.comments[commentIndex];
-
-        // 댓글 삭제
-        commentsData.comments.splice(commentIndex, 1);
-
-        // 게시물의 commentsCnt 감소
-        fs.readFile(postsFilePath, 'utf8', (err, postData) => {
-            if (err) {
-                console.error("파일 읽기 오류:", err);
-                return res.status(500).json({ message: "서버 오류: 게시물 데이터 로딩 실패", data: null });
-            }
-
-            let postsData = JSON.parse(postData);
-            const post = postsData.posts.find(post => post.postId === comment.postId);
-
-            if (post) {
-                post.commentsCnt -= 1; // 댓글 수 감소
-                // 변경된 게시물 데이터를 파일에 저장
-                fs.writeFile(postsFilePath, JSON.stringify(postsData, null, 2), 'utf8', (err) => {
-                    if (err) {
-                        console.error("파일 저장 오류:", err);
-                        return res.status(500).json({ message: "서버 오류: 게시물 데이터 저장 실패", data: null });
-                    }
-                });
-            }
-
-            // 댓글 데이터를 다시 저장
-            fs.writeFile(commentsFilePath, JSON.stringify(commentsData, null, 2), 'utf8', (err) => {
-                if (err) {
-                    console.error("파일 저장 오류:", err);
-                    return res.status(500).json({ message: "서버 오류: 댓글 데이터 저장 실패", data: null });
-                }
-
-                return res.status(200).json({ message: "댓글 삭제 성공", data: null });
-            });
-        });
-    });
-};
-
-
-// 댓글 등록
-exports.addComment = (req, res) => {
-    const { userId, postId, content, date } = req.body;
-    console.log("댓글 유저 ID : "+userId);
-    if (!userId || !postId || !content || !date) {
-        return res.status(400).json({ message: "필수 정보가 누락되었습니다.", data: null });
-    }
-
-    const numericUserId = parseInt(userId, 10);
-    const numericPostId = parseInt(postId, 10);
-
-    fs.readFile(usersFilePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error("파일 읽기 오류:", err);
-            return res.status(500).json({ message: "서버 오류: 사용자 정보 로딩 실패", data: null });
-        }
-
-        let usersData = JSON.parse(data);
-        const user = usersData.find(user => user.userId === numericUserId);
-
-        if (!user) {
+    try {
+        const author = await User.getUserById(userId);
+        if (!author) {
             return res.status(404).json({ message: "사용자를 찾을 수 없습니다.", data: null });
         }
 
-        fs.readFile(commentsFilePath, 'utf8', (err, data) => {
-            if (err) {
-                console.error("파일 읽기 오류:", err);
-                return res.status(500).json({ message: "서버 오류: 댓글 데이터 로딩 실패", data: null });
-            }
+        const newCommentId = await Comment.createComment(userId, postId, content);
+        const newComment = await Comment.getCommentById(newCommentId); // DB에서 추가된 댓글 정보 가져오기
 
-            let commentsData = JSON.parse(data);
-
-            const newCommentId = commentsData.comments.length > 0
-                ? Math.max(...commentsData.comments.map(comment => comment.commentId)) + 1
-                : 1;
-
-            const newComment = {
-                commentId: newCommentId,
-                postId: numericPostId,
-                content: content,
+        // 댓글 수 증가
+        const post = await Post.getPostById(postId);
+        if (post) {
+            await Post.updatePost(postId, post.user_id, post.title, post.content, post.likes, post.views, post.comments_cnt + 1, post.image_url);
+        }
+        console.log("댓글 등록");
+        res.status(200).json({
+            message: "댓글 등록 성공",
+            data: {
+                commentId: newComment.comment_id,
+                postId,
+                content: newComment.content,
+                date: newComment.date, // DB에서 자동 생성된 date 반환
                 author: {
-                    userId: numericUserId,
-                    nickname: user.nickname,
-                    profileImage: user.profileImage,
-                },
-                date: date,
-            };
-
-            commentsData.comments.unshift(newComment);
-
-            // 게시물의 commentsCnt 증가
-            fs.readFile(postsFilePath, 'utf8', (err, postData) => {
-                if (err) {
-                    console.error("파일 읽기 오류:", err);
-                    return res.status(500).json({ message: "서버 오류: 게시물 데이터 로딩 실패", data: null });
+                    userId: author.user_id,
+                    nickname: author.nickname,
+                    profileImg: author.profile_image
                 }
-
-                let postsData = JSON.parse(postData);
-                const post = postsData.posts.find(post => post.postId === numericPostId);
-
-                if (post) {
-                    post.commentsCnt += 1; // 댓글 수 증가
-                    // 변경된 게시물 데이터를 파일에 저장
-                    fs.writeFile(postsFilePath, JSON.stringify(postsData, null, 2), 'utf8', (err) => {
-                        if (err) {
-                            console.error("파일 저장 오류:", err);
-                            return res.status(500).json({ message: "서버 오류: 게시물 데이터 저장 실패", data: null });
-                        }
-                    });
-                }
-
-                // 댓글 데이터를 다시 저장
-                fs.writeFile(commentsFilePath, JSON.stringify(commentsData, null, 2), 'utf8', (err) => {
-                    if (err) {
-                        console.error("파일 저장 오류:", err);
-                        return res.status(500).json({ message: "서버 오류: 댓글 데이터 저장 실패", data: null });
-                    }
-
-                    return res.status(200).json({ message: "댓글 등록 성공", data: newComment });
-                });
-            });
+            }
         });
-    });
+
+    } catch (err) {
+        console.error("댓글 등록 중 오류:", err);
+        res.status(500).json({ message: "서버 오류", data: null });
+    }
+};
+
+// 댓글 목록 조회
+export const getCommentsList = async (req, res) => {
+    try {
+        const comments = await Comment.getAllComments();
+
+        // 작성자 정보를 포함한 댓글 데이터 포맷팅
+        const formattedComments = comments.map(comment => ({
+            commentId: comment.comment_id,
+            postId: comment.post_id,
+            content: comment.content,
+            date: comment.date,
+            author: {
+                userId: comment.author_user_id,
+                nickname: comment.author_nickname,
+                profileImg: comment.author_profile_image
+            }
+        }));
+        console.log("댓글 목록 조회");
+        res.status(200).json({
+            message: "댓글 목록 조회 성공",
+            data: formattedComments
+        });
+
+    } catch (err) {
+        console.error("댓글 목록 조회 실패:", err);
+        res.status(500).json({ message: "서버 오류", data: null });
+    }
+};
+
+// 댓글 수정
+export const editComment = async (req, res) => {
+    const commentId = parseInt(req.params.commentId);
+    const { content } = req.body;
+
+    try {
+        const comment = await Comment.getCommentById(commentId);
+        if (!comment) {
+            return res.status(404).json({ message: "댓글을 찾을 수 없습니다.", data: null });
+        }
+
+        await Comment.updateComment(commentId, content);
+        console.log("댓글 수정")
+        res.status(200).json({
+            message: "댓글 수정 성공",
+            data: {
+                commentId,
+                content,
+                date: comment.date // 기존 댓글의 date 반환
+            }
+        });
+
+    } catch (err) {
+        console.error("댓글 수정 중 오류:", err);
+        res.status(500).json({ message: "서버 오류", data: null });
+    }
+};
+
+// 댓글 삭제
+export const deleteComment = async (req, res) => {
+    const commentId = parseInt(req.params.commentId);
+
+    try {
+        const comment = await Comment.getCommentById(commentId);
+        if (!comment) {
+            return res.status(404).json({ message: "댓글을 찾을 수 없습니다.", data: null });
+        }
+
+        await Comment.deleteComment(commentId);
+
+        // 댓글 수 감소
+        const post = await Post.getPostById(comment.post_id);
+        if (post) {
+            await Post.updatePost(post.post_id, post.user_id, post.title, post.content, post.likes, post.views, post.comments_cnt - 1, post.image_url);
+        }
+        console.log("댓글 삭제");
+        res.status(200).json({
+            message: "댓글 삭제 성공",
+            data: null
+        });
+
+    } catch (err) {
+        console.error("댓글 삭제 중 오류:", err);
+        res.status(500).json({ message: "서버 오류", data: null });
+    }
 };

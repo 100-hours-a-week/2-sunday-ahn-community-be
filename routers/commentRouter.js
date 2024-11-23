@@ -1,13 +1,15 @@
-const express = require('express');
-const commentController = require('../controllers/commentController');
+import express from 'express';
+import { editComment, 
+        deleteComment, 
+        addComment } from '../controllers/commentController.js';
+
 const router = express.Router();
 
 //댓글 수정
-router.put('/:commentId', commentController.editComment);
+router.put('/:commentId', editComment);
 //댓글 삭제
-router.delete('/:commentId', commentController.deleteComment);
+router.delete('/:commentId', deleteComment);
 //댓글 등록
-router.post('/', commentController.addComment);
+router.post('/', addComment);
 
-
-module.exports = router;
+export default router;
