@@ -5,10 +5,8 @@ import helmet from 'helmet';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import moment from "moment";
 import "colors";
 
-import db from "./config/database.js"
 import userRoutes from './routers/userRouter.js';
 import postRoutes from './routers/postRouter.js';
 import commentRoutes from './routers/commentRouter.js';
