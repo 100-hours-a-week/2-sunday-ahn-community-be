@@ -1,9 +1,11 @@
 import express from 'express';
-import { logout,
-        withdrawUser, 
-        editProfileImage,
-        editNickname, 
-        editPassword } from '../controllers/userController.js';
+import {
+    logout,
+    withdrawUser,
+    editProfileImage,
+    editNickname,
+    editPassword,
+} from '../controllers/userController.js';
 
 const router = express.Router();
 

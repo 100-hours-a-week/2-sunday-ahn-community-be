@@ -17,13 +17,31 @@ const Post = {
     },
 
     // 게시물 추가하기
-    createPost: async (user_id, title, content, likes, views, comments_cnt, image_url) => {
+    createPost: async (
+        user_id,
+        title,
+        content,
+        likes,
+        views,
+        comments_cnt,
+        image_url,
+    ) => {
         const query = `
             INSERT INTO Post (user_id, title, content, likes, views, comments_cnt, image_url) 
             VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
         try {
-            const [results] = await db.promise().query(query, [user_id, title, content, likes, views, comments_cnt, image_url]);
+            const [results] = await db
+                .promise()
+                .query(query, [
+                    user_id,
+                    title,
+                    content,
+                    likes,
+                    views,
+                    comments_cnt,
+                    image_url,
+                ]);
             return results.insertId;
         } catch (error) {
             throw error;
@@ -31,7 +49,7 @@ const Post = {
     },
 
     // 특정 게시물 가져오기
-    getPostById: async (post_id) => {
+    getPostById: async post_id => {
         try {
             const query = `
                 SELECT Post.*, User.user_id AS author_user_id, User.nickname AS author_nickname, User.profile_image AS author_profile_image
@@ -47,14 +65,34 @@ const Post = {
     },
 
     // 게시물 수정하기
-    updatePost: async (post_id, user_id, title, content, likes, views, comments_cnt, image_url) => {
+    updatePost: async (
+        post_id,
+        user_id,
+        title,
+        content,
+        likes,
+        views,
+        comments_cnt,
+        image_url,
+    ) => {
         const query = `
             UPDATE Post 
             SET user_id = ?, title = ?, content = ?, likes = ?, views = ?, comments_cnt = ?, image_url = ? 
             WHERE post_id = ?
         `;
         try {
-            const [results] = await db.promise().query(query, [user_id, title, content, likes, views, comments_cnt, image_url, post_id]);
+            const [results] = await db
+                .promise()
+                .query(query, [
+                    user_id,
+                    title,
+                    content,
+                    likes,
+                    views,
+                    comments_cnt,
+                    image_url,
+                    post_id,
+                ]);
             return results.affectedRows;
         } catch (error) {
             throw error;
@@ -62,14 +100,16 @@ const Post = {
     },
 
     // 게시물 삭제하기
-    deletePost: async (post_id) => {
+    deletePost: async post_id => {
         try {
-            const [results] = await db.promise().query('DELETE FROM Post WHERE post_id = ?', [post_id]);
+            const [results] = await db
+                .promise()
+                .query('DELETE FROM Post WHERE post_id = ?', [post_id]);
             return results.affectedRows;
         } catch (error) {
             throw error;
         }
-    }
+    },
 };
 
 export default Post;

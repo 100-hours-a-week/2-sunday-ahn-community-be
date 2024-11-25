@@ -11,16 +11,16 @@ export const getUserInfo = (req, res) => {
         // 세션에 저장된 사용자 정보를 반환
         res.status(200).json({
             isLogin: true,
-            data: req.session.user
+            data: req.session.user,
         });
     } else {
         // 세션에 정보가 없으면 에러 반환
         res.status(400).json({
             isLogin: false,
-            data: null
+            data: null,
         });
     }
-    console.log("세션 전송");
+    console.log('세션 전송');
 };
 
 // 로그인 검증
@@ -34,7 +34,11 @@ export const login = async (req, res) => {
         // 비밀번호 검증
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(401).json({ message: "*이메일 또는 비밀번호가 올바르지 않습니다." });
+            return res
+                .status(401)
+                .json({
+                    message: '*이메일 또는 비밀번호가 올바르지 않습니다.',
+                });
         }
 
         // 로그인 성공: 세션에 사용자 정보 저장
@@ -42,12 +46,12 @@ export const login = async (req, res) => {
             userId: user.user_id,
             email: user.email,
             nickname: user.nickname,
-            profileImage: user.profile_image
+            profileImage: user.profile_image,
         };
 
         res.status(200).json({
             message: '로그인 성공',
-            data: null
+            data: null,
         });
     } catch (error) {
         console.error('로그인 오류:', error);
@@ -63,13 +67,17 @@ export const regist = async (req, res) => {
         // 이메일 중복 검사
         const emailExists = await User.getUserByEmail(email);
         if (emailExists) {
-            return res.status(401).json({ message: "*중복된 이메일입니다", data: null });
+            return res
+                .status(401)
+                .json({ message: '*중복된 이메일입니다', data: null });
         }
 
         // 닉네임 중복 검사
         const nicknameExists = await User.getUserByNickname(nickname);
         if (nicknameExists) {
-            return res.status(402).json({ message: "*중복된 닉네임입니다", data: null });
+            return res
+                .status(402)
+                .json({ message: '*중복된 닉네임입니다', data: null });
         }
 
         // 비밀번호 암호화
@@ -78,11 +86,17 @@ export const regist = async (req, res) => {
 
         // 새로운 사용자 추가
         await User.createUser(email, hashedPassword, nickname, profileImage); // 암호화된 비밀번호 사용
-        console.log("회원가입");
-        res.status(200).json({ message: "회원가입이 성공적으로 완료되었습니다!", data: null });
+        console.log('회원가입');
+        res.status(200).json({
+            message: '회원가입이 성공적으로 완료되었습니다!',
+            data: null,
+        });
     } catch (error) {
         console.error('회원가입 오류:', error);
-        res.status(500).json({ message: "서버에 오류가 발생했습니다.", data: null });
+        res.status(500).json({
+            message: '서버에 오류가 발생했습니다.',
+            data: null,
+        });
     }
 };
 
@@ -92,8 +106,8 @@ export const emailCheck = async (req, res) => {
 
     if (!email) {
         return res.status(400).json({
-            message: "*이메일을 입력해주세요.",
-            data: null
+            message: '*이메일을 입력해주세요.',
+            data: null,
         });
     }
 
@@ -102,20 +116,20 @@ export const emailCheck = async (req, res) => {
 
         if (emailExists) {
             return res.status(401).json({
-                message: "*중복된 이메일입니다",
-                data: null
+                message: '*중복된 이메일입니다',
+                data: null,
             });
         } else {
             return res.status(200).json({
-                message: "이메일 중복 검사 성공",
-                data: null
+                message: '이메일 중복 검사 성공',
+                data: null,
             });
         }
     } catch (error) {
         console.error('이메일 중복 검사 오류:', error);
         res.status(500).json({
-            message: "서버에 오류가 발생했습니다.",
-            data: null
+            message: '서버에 오류가 발생했습니다.',
+            data: null,
         });
     }
 };
@@ -126,8 +140,8 @@ export const nicknameCheck = async (req, res) => {
 
     if (!nickname) {
         return res.status(400).json({
-            message: "*닉네임을 입력해주세요.",
-            data: null
+            message: '*닉네임을 입력해주세요.',
+            data: null,
         });
     }
 
@@ -136,20 +150,20 @@ export const nicknameCheck = async (req, res) => {
 
         if (nicknameExists) {
             return res.status(401).json({
-                message: "*중복된 닉네임입니다",
-                data: null
+                message: '*중복된 닉네임입니다',
+                data: null,
             });
         } else {
             return res.status(200).json({
-                message: "닉네임 중복 검사 성공",
-                data: null
+                message: '닉네임 중복 검사 성공',
+                data: null,
             });
         }
     } catch (error) {
         console.error('닉네임 중복 검사 오류:', error);
         res.status(500).json({
-            message: "서버에 오류가 발생했습니다.",
-            data: null
+            message: '서버에 오류가 발생했습니다.',
+            data: null,
         });
     }
 };

@@ -19,17 +19,17 @@ export const getPostsList = async (req, res) => {
             author: {
                 userId: post.author_user_id,
                 nickname: post.author_nickname,
-                profileImg: post.author_profile_image
-            }
+                profileImg: post.author_profile_image,
+            },
         }));
-        console.log("게시물 목록 조회");
+        console.log('게시물 목록 조회');
         res.status(200).json({
-            message: "게시물 목록 조회 성공",
-            data: postList
+            message: '게시물 목록 조회 성공',
+            data: postList,
         });
     } catch (err) {
-        console.error("게시물 조회 실패:", err);
-        res.status(500).json({ message: "서버 오류", data: null });
+        console.error('게시물 조회 실패:', err);
+        res.status(500).json({ message: '서버 오류', data: null });
     }
 };
 
@@ -40,7 +40,9 @@ export const getPost = async (req, res) => {
     try {
         const post = await Post.getPostById(postId);
         if (!post) {
-            return res.status(404).json({ message: "게시물이 존재하지 않습니다.", data: null });
+            return res
+                .status(404)
+                .json({ message: '게시물이 존재하지 않습니다.', data: null });
         }
 
         // 댓글 조회
@@ -55,8 +57,8 @@ export const getPost = async (req, res) => {
                 author: {
                     userId: comment.author_user_id,
                     nickname: comment.author_nickname,
-                    profileImg: comment.author_profile_image
-                }
+                    profileImg: comment.author_profile_image,
+                },
             }));
 
         await Post.updatePost(
@@ -67,7 +69,7 @@ export const getPost = async (req, res) => {
             post.likes,
             post.views + 1,
             post.comments_cnt,
-            post.image_url
+            post.image_url,
         );
 
         const postData = {
@@ -82,19 +84,18 @@ export const getPost = async (req, res) => {
             author: {
                 userId: post.author_user_id,
                 nickname: post.author_nickname,
-                profileImg: post.author_profile_image
+                profileImg: post.author_profile_image,
             },
-            comments: postComments
+            comments: postComments,
         };
-        console.log("게시물 상세 조회");
+        console.log('게시물 상세 조회');
         res.status(200).json({
-            message: "게시글 상세 조회 성공",
-            data: postData
+            message: '게시글 상세 조회 성공',
+            data: postData,
         });
-
     } catch (err) {
-        console.error("게시물 상세 조회 실패:", err);
-        res.status(500).json({ message: "서버 오류", data: null });
+        console.error('게시물 상세 조회 실패:', err);
+        res.status(500).json({ message: '서버 오류', data: null });
     }
 };
 
@@ -104,10 +105,20 @@ export const addPost = async (req, res) => {
     try {
         const author = await User.getUserById(userId);
         if (!author) {
-            return res.status(404).json({ message: "작성자 정보가 없습니다.", data: null });
+            return res
+                .status(404)
+                .json({ message: '작성자 정보가 없습니다.', data: null });
         }
 
-        const postId = await Post.createPost(userId, title, content, 0, 0, 0, imageUrl);
+        const postId = await Post.createPost(
+            userId,
+            title,
+            content,
+            0,
+            0,
+            0,
+            imageUrl,
+        );
 
         const newPost = {
             postId,
@@ -121,18 +132,17 @@ export const addPost = async (req, res) => {
             author: {
                 userId: author.user_id,
                 nickname: author.nickname,
-                profileImage: author.profile_image
-            }
+                profileImage: author.profile_image,
+            },
         };
-        console.log("게시물 작성");
+        console.log('게시물 작성');
         res.status(200).json({
-            message: "게시물 작성 성공",
-            data: newPost
+            message: '게시물 작성 성공',
+            data: newPost,
         });
-
     } catch (err) {
-        console.error("게시물 작성 중 오류 발생:", err);
-        res.status(500).json({ message: "서버 오류", data: null });
+        console.error('게시물 작성 중 오류 발생:', err);
+        res.status(500).json({ message: '서버 오류', data: null });
     }
 };
 
@@ -144,13 +154,24 @@ export const editPost = async (req, res) => {
     try {
         const post = await Post.getPostById(postId);
         if (!post) {
-            return res.status(404).json({ message: "게시물이 존재하지 않습니다.", data: null });
+            return res
+                .status(404)
+                .json({ message: '게시물이 존재하지 않습니다.', data: null });
         }
 
-        await Post.updatePost(postId, post.user_id, title, content, post.likes, post.views, post.comments_cnt, imageUrl);
-        console.log("게시물 수정");
+        await Post.updatePost(
+            postId,
+            post.user_id,
+            title,
+            content,
+            post.likes,
+            post.views,
+            post.comments_cnt,
+            imageUrl,
+        );
+        console.log('게시물 수정');
         res.status(200).json({
-            message: "게시물 수정 성공",
+            message: '게시물 수정 성공',
             data: {
                 postId,
                 title,
@@ -159,13 +180,12 @@ export const editPost = async (req, res) => {
                 views: post.views,
                 commentsCnt: post.commentsCnt,
                 date: post.date, // 수정 후에도 기존의 date 반환
-                imageUrl
-            }
+                imageUrl,
+            },
         });
-
     } catch (err) {
-        console.error("게시물 수정 중 오류 발생:", err);
-        res.status(500).json({ message: "서버 오류", data: null });
+        console.error('게시물 수정 중 오류 발생:', err);
+        res.status(500).json({ message: '서버 오류', data: null });
     }
 };
 
@@ -176,7 +196,9 @@ export const deletePost = async (req, res) => {
     try {
         const post = await Post.getPostById(postId);
         if (!post) {
-            return res.status(404).json({ message: "게시물이 존재하지 않습니다.", data: null });
+            return res
+                .status(404)
+                .json({ message: '게시물이 존재하지 않습니다.', data: null });
         }
 
         // 댓글 삭제
@@ -189,14 +211,13 @@ export const deletePost = async (req, res) => {
 
         // 게시물 삭제
         await Post.deletePost(postId);
-        console.log("게시물 삭제");
+        console.log('게시물 삭제');
         res.status(200).json({
-            message: "게시물 삭제 성공",
-            data: null
+            message: '게시물 삭제 성공',
+            data: null,
         });
-
     } catch (err) {
-        console.error("게시물 삭제 중 오류 발생:", err);
-        res.status(500).json({ message: "서버 오류", data: null });
+        console.error('게시물 삭제 중 오류 발생:', err);
+        res.status(500).json({ message: '서버 오류', data: null });
     }
 };
