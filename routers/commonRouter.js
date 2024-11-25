@@ -1,9 +1,11 @@
 import express from 'express';
-import { login, 
-        regist, 
-        getUserInfo, 
-        emailCheck, 
-        nicknameCheck } from '../controllers/authController.js';
+import {
+    login,
+    regist,
+    getUserInfo,
+    emailCheck,
+    nicknameCheck,
+} from '../controllers/authController.js';
 
 const router = express.Router();
 

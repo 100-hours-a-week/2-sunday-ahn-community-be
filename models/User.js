@@ -13,9 +13,12 @@ const User = {
 
     // 사용자 추가하기
     createUser: async (email, password, nickname, profile_image) => {
-        const query = 'INSERT INTO User (email, password, nickname, profile_image) VALUES (?, ?, ?, ?)';
+        const query =
+            'INSERT INTO User (email, password, nickname, profile_image) VALUES (?, ?, ?, ?)';
         try {
-            const [results] = await db.promise().query(query, [email, password, nickname, profile_image]);
+            const [results] = await db
+                .promise()
+                .query(query, [email, password, nickname, profile_image]);
             return results.insertId;
         } catch (error) {
             throw error;
@@ -23,9 +26,11 @@ const User = {
     },
 
     // 특정 사용자 가져오기 (ID 기반)
-    getUserById: async (user_id) => {
+    getUserById: async user_id => {
         try {
-            const [results] = await db.promise().query('SELECT * FROM User WHERE user_id = ?', [user_id]);
+            const [results] = await db
+                .promise()
+                .query('SELECT * FROM User WHERE user_id = ?', [user_id]);
             return results[0];
         } catch (error) {
             throw error;
@@ -33,7 +38,7 @@ const User = {
     },
 
     // 이메일로 사용자 조회
-    getUserByEmail: async (email) => {
+    getUserByEmail: async email => {
         const query = 'SELECT * FROM User WHERE email = ?';
         try {
             const [results] = await db.promise().query(query, [email]);
@@ -44,7 +49,7 @@ const User = {
     },
 
     // 닉네임으로 사용자 조회
-    getUserByNickname: async (nickname) => {
+    getUserByNickname: async nickname => {
         const query = 'SELECT * FROM User WHERE nickname = ?';
         try {
             const [results] = await db.promise().query(query, [nickname]);
@@ -56,9 +61,18 @@ const User = {
 
     // 사용자 수정하기
     updateUser: async (user_id, email, password, nickname, profile_image) => {
-        const query = 'UPDATE User SET email = ?, password = ?, nickname = ?, profile_image = ? WHERE user_id = ?';
+        const query =
+            'UPDATE User SET email = ?, password = ?, nickname = ?, profile_image = ? WHERE user_id = ?';
         try {
-            const [results] = await db.promise().query(query, [email, password, nickname, profile_image, user_id]);
+            const [results] = await db
+                .promise()
+                .query(query, [
+                    email,
+                    password,
+                    nickname,
+                    profile_image,
+                    user_id,
+                ]);
             return results.affectedRows;
         } catch (error) {
             throw error;
@@ -66,14 +80,16 @@ const User = {
     },
 
     // 사용자 삭제하기
-    deleteUser: async (user_id) => {
+    deleteUser: async user_id => {
         try {
-            const [results] = await db.promise().query('DELETE FROM User WHERE user_id = ?', [user_id]);
+            const [results] = await db
+                .promise()
+                .query('DELETE FROM User WHERE user_id = ?', [user_id]);
             return results.affectedRows;
         } catch (error) {
             throw error;
         }
-    }
+    },
 };
 
 export default User;
