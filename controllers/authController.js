@@ -30,7 +30,12 @@ export const login = async (req, res) => {
     try {
         // 이메일로 사용자 정보 조회
         const user = await User.getUserByEmail(email);
-
+        // 이메일이 존재하지 않으면
+        if (!user) {
+            return res.status(404).json({
+                message: '*이메일 또는 비밀번호가 올바르지 않습니다.',
+            });
+        }
         // 비밀번호 검증
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {

@@ -8,6 +8,7 @@ const Comment = {
                 SELECT Comment.*, User.user_id AS author_user_id, User.nickname AS author_nickname, User.profile_image AS author_profile_image
                 FROM Comment
                 JOIN User ON Comment.user_id = User.user_id
+                ORDER BY Comment.date DESC
             `;
             const [results] = await db.promise().query(query);
             return results;
