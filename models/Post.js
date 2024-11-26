@@ -111,6 +111,22 @@ const Post = {
             throw error;
         }
     },
+
+    // 게시물 좋아요 수 증가
+    increaseLikes: async (post_id) => {
+        const query = `
+            UPDATE Post
+            SET likes = likes + 1
+            WHERE post_id = ?
+        `;
+        try {
+            const [results] = await db.promise().query(query, [post_id]);
+            return results.affectedRows; // 성공적으로 업데이트된 행 수 반환
+        } catch (error) {
+            throw error;
+        }
+    },
+    
 };
 
 export default Post;

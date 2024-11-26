@@ -5,6 +5,7 @@ import {
     deletePost,
     editPost,
     addPost,
+    likePost,
 } from '../controllers/postController.js';
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.delete('/:postId', deletePost);
 router.put('/:postId', editPost);
 // 게시물 등록
 router.post('/', addPost);
-
+// 게시물 좋아요
+router.get('/:postId/likes', likePost);
 export default router;

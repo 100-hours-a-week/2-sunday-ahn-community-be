@@ -220,4 +220,37 @@ export const deletePost = async (req, res) => {
         console.error('게시물 삭제 중 오류 발생:', err);
         res.status(500).json({ message: '서버 오류', data: null });
     }
+    
+};
+
+// 게시물 좋아요 클릭
+export const likePost = async (req, res) => {
+    const postId = parseInt(req.params.postId);
+
+    try {
+        // 게시물 존재 여부 확인
+        const post = await Post.getPostById(postId);
+        if (!post) {
+            return res
+                .status(404)
+                .json({ message: '게시물이 존재하지 않습니다.', data: null });
+        }
+
+        // 좋아요 수 증가
+        const result = await Post.increaseLikes(postId);
+        if (result === 0) {
+            return res
+                .status(500)
+                .json({ message: '좋아요 증가 실패', data: null });
+        }
+
+        // 성공적으로 좋아요 수를 증가시킨 후 응답
+        res.status(200).json({
+            message: '좋아요 성공',
+            data: null, // 추가 데이터가 필요 없으면 null
+        });
+    } catch (err) {
+        console.error('좋아요 처리 중 오류 발생:', err);
+        res.status(500).json({ message: '서버 오류', data: null });
+    }
 };
