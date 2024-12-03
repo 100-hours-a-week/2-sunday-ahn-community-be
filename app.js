@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 // CORS 정책 설정
 app.use(
     cors({
-        origin: 'http://localhost:2000', // 클라이언트 URL
+        origin: ['http://3.36.118.177:80', 'http://localhost:2000'], // 클라이언트 URL
         credentials: true,
     }),
 );
