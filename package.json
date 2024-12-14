@@ -6,8 +6,8 @@
     "type": "module",
     "scripts": {
         "start": "node app.js ",
-        "dev": "nodemon app.js",
-        "pm2start": "pm2 start app.js",
+        "dev": "demon app.js",
+        "devstart": "pm2 start app.js",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "format": "prettier --write ."
@@ -30,6 +30,7 @@
         "multer": "^1.4.4",
         "mysql": "^2.18.1",
         "mysql2": "^3.11.4",
+        "pm2": "^5.4.3",
         "prettier": "^3.3.3"
     },
     "devDependencies": {
