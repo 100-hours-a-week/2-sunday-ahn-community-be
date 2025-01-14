@@ -6,6 +6,8 @@ import {
     editPost,
     addPost,
     likePost,
+    generatePostPresignedUrl,
+    deletePostImage,
 } from '../controllers/postController.js';
 
 const router = express.Router();
@@ -22,4 +24,11 @@ router.put('/:postId', editPost);
 router.post('/', addPost);
 // 게시물 좋아요
 router.get('/:postId/likes', likePost);
+// 게시물 이미지 업로드
+router.post('/uploadPostImage', generatePostPresignedUrl);
+// 게시물 이미지 삭제
+router.delete('/postImage/:imageUrl', deletePostImage);
+
 export default router;
+
+

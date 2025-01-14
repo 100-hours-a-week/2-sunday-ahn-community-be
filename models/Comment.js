@@ -10,7 +10,7 @@ const Comment = {
                 JOIN User ON Comment.user_id = User.user_id
                 ORDER BY Comment.date DESC
             `;
-            const [results] = await db.promise().query(query);
+            const [results] = await db.connection.query(query);
             return results;
         } catch (error) {
             throw error;
@@ -23,7 +23,7 @@ const Comment = {
             'INSERT INTO Comment (user_id, post_id, content) VALUES (?, ?, ?)';
         try {
             const [results] = await db
-                .promise()
+                .connection
                 .query(query, [user_id, post_id, content]);
             return results.insertId; // 새로 생성된 댓글 ID 반환
         } catch (error) {
@@ -40,7 +40,7 @@ const Comment = {
                 JOIN User ON Comment.user_id = User.user_id
                 WHERE Comment.comment_id = ?
             `;
-            const [results] = await db.promise().query(query, [comment_id]);
+            const [results] = await db.connection.query(query, [comment_id]);
             return results[0];
         } catch (error) {
             throw error;
@@ -52,7 +52,7 @@ const Comment = {
         const query = 'UPDATE Comment SET content = ? WHERE comment_id = ?';
         try {
             const [results] = await db
-                .promise()
+                .connection
                 .query(query, [content, comment_id]);
             return results.affectedRows; // 수정된 행 수 반환
         } catch (error) {
@@ -64,7 +64,7 @@ const Comment = {
     deleteComment: async comment_id => {
         try {
             const [results] = await db
-                .promise()
+                .connection
                 .query('DELETE FROM Comment WHERE comment_id = ?', [
                     comment_id,
                 ]);
