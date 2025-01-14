@@ -1,6 +1,6 @@
 ### dotenv ###
 .env
-node_modules/
+
 ### macOS ###
 # General
 .DS_Store
@@ -9,7 +9,6 @@ node_modules/
 
 # Icon must end with two \r
 Icon
-
 
 # Thumbnails
 ._*
@@ -33,3 +32,6 @@ Temporary Items
 ### macOS Patch ###
 # iCloud generated files
 *.icloud
+
+### Node.js ###
+node_modules/
