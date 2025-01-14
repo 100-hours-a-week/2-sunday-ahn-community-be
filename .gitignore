@@ -1,6 +1,6 @@
 ### dotenv ###
 .env
-
+node_modules/
 ### macOS ###
 # General
 .DS_Store
