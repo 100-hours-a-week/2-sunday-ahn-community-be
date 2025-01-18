@@ -32,7 +32,7 @@ const Comment = {
     },
 
     // 특정 댓글 가져오기 (작성자 정보 포함)
-    getCommentById: async comment_id => {
+    getCommentById: async (comment_id) => {
         try {
             const query = `
                 SELECT Comment.*, User.user_id AS author_user_id, User.nickname AS author_nickname, User.profile_image AS author_profile_image
@@ -46,7 +46,39 @@ const Comment = {
             throw error;
         }
     },
-
+    
+    // 특정 사용자의 댓글 가져오기
+    getCommentsByUserId: async (user_id) => {
+        try {
+            const query = `
+                SELECT Comment.*, User.user_id AS author_user_id, User.nickname AS author_nickname, User.profile_image AS author_profile_image
+                FROM Comment
+                JOIN User ON Comment.user_id = User.user_id
+                WHERE Comment.user_id = ?
+                ORDER BY Comment.date DESC
+            `;
+            const [results] = await db.connection.query(query, [user_id]);
+            return results;
+        } catch (error) {
+            throw error;
+        }
+    },
+    // 특정 게시글의 댓글 가져오기
+    getCommentsByPostId: async (post_id) => {
+        try {
+            const query = `
+                SELECT Comment.*, User.user_id AS author_user_id, User.nickname AS author_nickname, User.profile_image AS author_profile_image
+                FROM Comment
+                JOIN User ON Comment.user_id = User.user_id
+                WHERE Comment.post_id = ?
+                ORDER BY Comment.date DESC
+            `;
+            const [results] = await db.connection.query(query, [post_id]);
+            return results; // 해당 게시글의 댓글 반환
+        } catch (error) {
+            throw error;
+        }
+    },
     // 댓글 수정하기
     updateComment: async (comment_id, content) => {
         const query = 'UPDATE Comment SET content = ? WHERE comment_id = ?';

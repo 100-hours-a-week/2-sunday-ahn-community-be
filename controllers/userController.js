@@ -2,6 +2,9 @@ import User from '../models/User.js';
 import Post from '../models/Post.js';
 import Comment from '../models/Comment.js';
 import bcrypt from 'bcrypt';
+import s3 from '../config/s3.js';
+import 'dotenv/config';
+import { validateNickname,validatePassword } from "./authController.js";
 
 // 로그아웃
 export const logout = (req, res) => {
@@ -18,52 +21,67 @@ export const logout = (req, res) => {
     }
 };
 
-// 회원탈퇴
+// 회원 탈퇴
 export const withdrawUser = async (req, res) => {
     const userId = parseInt(req.params.userId);
 
     try {
-        // 유저가 작성한 댓글 삭제
-        const comments = await Comment.getAllComments();
-        const userComments = comments.filter(
-            comment => comment.user_id === userId,
-        );
+        // 유저가 작성한 게시글 가져오기
+        const userPosts = await Post.getPostsByUserId(userId);
 
-        for (const comment of userComments) {
-            await Comment.deleteComment(comment.comment_id);
+        // 각 게시글에 달린 댓글 삭제
+        for (const post of userPosts) {
+            const postComments = await Comment.getCommentsByPostId(post.post_id);
+            for (const comment of postComments) {
+                await Comment.deleteComment(comment.comment_id);
+            }
+            // 게시글 삭제
+            await Post.deletePost(post.post_id);
         }
 
-        // 유저가 작성한 게시물 삭제
-        const posts = await Post.getAllPosts();
-        const userPosts = posts.filter(post => post.user_id === userId);
+        // 유저가 작성한 댓글 삭제 (다른 사용자의 게시글에 남긴 댓글)
+        const userComments = await Comment.getCommentsByUserId(userId);
+        for (const comment of userComments) {
+            await Comment.deleteComment(comment.comment_id);
+            await Post.updateCommentsCount(comment.post_id); // 댓글 수 업데이트
+        }
 
-        for (const post of userPosts) {
-            // 게시물 삭제
-            await Post.deletePost(post.post_id);
+        // 유저 프로필 삭제
+        const userProfile = await User.getUserById(userId);
+        console.log("user:", userProfile);
+        if(userProfile.profile_image !== ""){
+            const key = userProfile.profile_image.split("profiles/").pop(); // S3 파일 경로 추출
+            const params = {
+                Bucket: process.env.AWS_BUCKET_NAME,
+                Key: `profiles/${key}`,
+            };
+            try {
+                await s3.deleteObject(params).promise();
+                console.log("S3에서 이미지 삭제 성공:", userProfile.profile_image);
+            } catch (error) {
+                console.error("S3 이미지 삭제 실패:", error);
+                throw new Error("S3 이미지 삭제 중 오류가 발생했습니다.");
+            }
         }
 
         // 유저 삭제
         const affectedRows = await User.deleteUser(userId);
         if (affectedRows === 0) {
-            return res
-                .status(404)
-                .json({ message: '사용자를 찾을 수 없습니다.', data: null });
+            return res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
         }
 
-        // 세션도 제거
+        // 세션 제거
         req.session.destroy(err => {
             if (err) {
-                return res.status(500).json({ message: '로그아웃 실패' });
+                return res.status(500).json({ message: "로그아웃 실패" });
             }
-            res.clearCookie('connect.sid'); // 세션 쿠키 제거
-            console.log('회원탈퇴 및 관련된 게시물/댓글 삭제 완료');
-            res.status(200).json({ message: '회원탈퇴 성공', data: null });
+            res.clearCookie("connect.sid"); // 세션 쿠키 제거
+            console.log("회원탈퇴 및 관련된 게시물/댓글 삭제 완료");
+            res.status(200).json({ message: "회원탈퇴 성공" });
         });
     } catch (err) {
-        console.error('데이터베이스 오류:', err);
-        return res
-            .status(500)
-            .json({ message: '서버에 오류가 발생했습니다.', data: null });
+        console.error("데이터베이스 오류:", err);
+        return res.status(500).json({ message: "서버에 오류가 발생했습니다." });
     }
 };
 
@@ -72,10 +90,11 @@ export const editNickname = async (req, res) => {
     const userId = parseInt(req.params.userId);
     const { newNickname } = req.body;
 
-    if (!newNickname || newNickname.length === 0) {
-        return res
-            .status(400)
-            .json({ message: '새로운 닉네임을 입력해주세요.', data: null });
+    // 닉네임 유효성 검사
+    if (validateNickname(newNickname)) {
+        return res.status(400).json({
+            message: '입력한 정보가 올바르지않습니다.',
+        });
     }
 
     try {
@@ -185,7 +204,8 @@ export const editPassword = async (req, res) => {
 
 // 프로필 사진 변경
 export const editProfileImage = async (req, res) => {
-    const userId = parseInt(req.params.userId);
+    const userId = decodeURIComponent(req.params.userId);
+
     const { newProfileImg } = req.body;
 
     try {
@@ -225,5 +245,30 @@ export const editProfileImage = async (req, res) => {
         return res
             .status(500)
             .json({ message: '서버에 오류가 발생했습니다.', data: null });
+    }
+};
+
+export const deleteProfileImage = async (req,res) => {
+    const imageUrl = decodeURIComponent(req.params.imageUrl);
+
+    if (!imageUrl) {
+        return res.status(400).json({ message: "이미지 URL이 필요합니다." });
+    }
+
+    // S3에서 삭제할 파일 Key 추출
+    const key = imageUrl.split("profiles/").pop(); // URL에서 파일 경로 추출
+
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `profiles/${key}`,
+    };
+
+    try {
+        await s3.deleteObject(params).promise(); // S3에서 파일 삭제
+        res.status(200).json({ message: "이미지가 삭제되었습니다." });
+        console.log("이미지 삭제함");
+    } catch (error) {
+        console.error("이미지 삭제 오류:", error);
+        res.status(500).json({ message: "이미지 삭제 중 오류가 발생했습니다." });
     }
 };
