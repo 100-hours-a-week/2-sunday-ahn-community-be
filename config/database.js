@@ -7,7 +7,7 @@ const connection = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
-    timezone: 'Asia/Seoul', // 문자열로 타임존 설정
+    timezone: '+9:00',
     waitForConnections: true,
     connectionLimit: 100, // 최대 연결 수
     queueLimit: 0, // 대기열 제한 (0은 제한 없음)
