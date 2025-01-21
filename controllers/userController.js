@@ -249,14 +249,11 @@ export const editProfileImage = async (req, res) => {
 };
 
 export const deleteProfileImage = async (req,res) => {
-    const imageUrl = decodeURIComponent(req.params.imageUrl);
+    const key = req.params.imageUrl;
 
-    if (!imageUrl) {
+    if (!key) {
         return res.status(400).json({ message: "이미지 URL이 필요합니다." });
     }
-
-    // S3에서 삭제할 파일 Key 추출
-    const key = imageUrl.split("profiles/").pop(); // URL에서 파일 경로 추출
 
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,

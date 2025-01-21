@@ -169,7 +169,7 @@ export const addPost = async (req, res) => {
 export const editPost = async (req, res) => {
     const postId = parseInt(req.params.postId);
     const { title, content, imageUrl } = req.body;
-
+    console.log("게시물 수정", imageUrl);
     // 글자 수 유효성 검사
     if (!title || title.length > 26) {
         return res.status(400).json({
@@ -324,14 +324,11 @@ export const generatePostPresignedUrl = (req, res) => {
 
 
 export const deletePostImage = async (req,res) => {
-    const imageUrl = decodeURIComponent(req.params.imageUrl);
+    const key = req.params.imageUrl;
 
-    if (!imageUrl) {
+    if (!key) {
         return res.status(400).json({ message: "이미지 URL이 필요합니다." });
     }
-
-    // S3에서 삭제할 파일 Key 추출
-    const key = imageUrl.split("postImages/").pop(); // URL에서 파일 경로 추출
 
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
