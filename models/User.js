@@ -4,7 +4,7 @@ const User = {
     // 모든 사용자 가져오기
     getAllUsers: async () => {
         try {
-            const [results] = await db.promise().query('SELECT * FROM User');
+            const [results] = await db.connection.query('SELECT * FROM User');
             return results;
         } catch (error) {
             throw error;
@@ -17,7 +17,7 @@ const User = {
             'INSERT INTO User (email, password, nickname, profile_image) VALUES (?, ?, ?, ?)';
         try {
             const [results] = await db
-                .promise()
+                .connection
                 .query(query, [email, password, nickname, profile_image]);
             return results.insertId;
         } catch (error) {
@@ -29,7 +29,7 @@ const User = {
     getUserById: async user_id => {
         try {
             const [results] = await db
-                .promise()
+                .connection
                 .query('SELECT * FROM User WHERE user_id = ?', [user_id]);
             return results[0];
         } catch (error) {
@@ -41,7 +41,7 @@ const User = {
     getUserByEmail: async email => {
         const query = 'SELECT * FROM User WHERE email = ?';
         try {
-            const [results] = await db.promise().query(query, [email]);
+            const [results] = await db.connection.query(query, [email]);
             return results[0]; // 이메일에 해당하는 첫 번째 사용자 반환
         } catch (error) {
             throw error;
@@ -52,7 +52,7 @@ const User = {
     getUserByNickname: async nickname => {
         const query = 'SELECT * FROM User WHERE nickname = ?';
         try {
-            const [results] = await db.promise().query(query, [nickname]);
+            const [results] = await db.connection.query(query, [nickname]);
             return results[0]; // 닉네임에 해당하는 첫 번째 사용자 반환
         } catch (error) {
             throw error;
@@ -65,7 +65,7 @@ const User = {
             'UPDATE User SET email = ?, password = ?, nickname = ?, profile_image = ? WHERE user_id = ?';
         try {
             const [results] = await db
-                .promise()
+                .connection
                 .query(query, [
                     email,
                     password,
@@ -83,7 +83,7 @@ const User = {
     deleteUser: async user_id => {
         try {
             const [results] = await db
-                .promise()
+                .connection
                 .query('DELETE FROM User WHERE user_id = ?', [user_id]);
             return results.affectedRows;
         } catch (error) {

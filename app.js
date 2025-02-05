@@ -15,10 +15,13 @@ import commonRoutes from './routers/commonRouter.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// trust proxy 설정
+app.set('trust proxy', 1);
+
 // CORS 정책 설정
 app.use(
     cors({
-        origin: 'http://localhost:2000', // 클라이언트 URL
+        origin: ['http://43.203.250.36:80', 'http://localhost:2000'], // 클라이언트 URL
         credentials: true,
     }),
 );
@@ -32,6 +35,7 @@ app.use(
     rateLimit({
         windowMs: 60 * 1000, // 1분 간격
         max: 100, // 최대 호출 횟수
+        trustProxy: false,
         handler: (req, res) => {
             // 제한 초과 시 콜백 함수
             res.status(429).json({

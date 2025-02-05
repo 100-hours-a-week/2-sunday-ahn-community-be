@@ -1,6 +1,8 @@
 import Post from '../models/Post.js';
 import Comment from '../models/Comment.js';
 import User from '../models/User.js';
+import s3 from '../config/s3.js';
+import 'dotenv/config';
 
 // 게시물 목록 조회
 export const getPostsList = async (req, res) => {
@@ -35,7 +37,7 @@ export const getPostsList = async (req, res) => {
 
 // 게시물 상세 조회
 export const getPost = async (req, res) => {
-    const postId = parseInt(req.params.postId);
+    const postId = parseInt(req.params.postId, 10);
 
     try {
         const post = await Post.getPostById(postId);
@@ -102,6 +104,23 @@ export const getPost = async (req, res) => {
 // 게시물 추가
 export const addPost = async (req, res) => {
     const { userId, title, content, imageUrl } = req.body;
+
+    // 글자 수 유효성 검사
+    if (!title || title.length > 26) {
+        return res.status(400).json({
+            message: '제목은 1자 이상 26자 이하로 작성해야 합니다.',
+            data: null,
+        });
+    }
+
+    if (!content || content.length > 2000) {
+        return res.status(400).json({
+            message: '내용은 1자 이상 2000자 이하로 작성해야 합니다.',
+            data: null,
+        });
+    }
+
+
     try {
         const author = await User.getUserById(userId);
         if (!author) {
@@ -138,7 +157,7 @@ export const addPost = async (req, res) => {
         console.log('게시물 작성');
         res.status(200).json({
             message: '게시물 작성 성공',
-            data: newPost,
+            data: newPost.postId,
         });
     } catch (err) {
         console.error('게시물 작성 중 오류 발생:', err);
@@ -150,6 +169,21 @@ export const addPost = async (req, res) => {
 export const editPost = async (req, res) => {
     const postId = parseInt(req.params.postId);
     const { title, content, imageUrl } = req.body;
+    console.log("게시물 수정", imageUrl);
+    // 글자 수 유효성 검사
+    if (!title || title.length > 26) {
+        return res.status(400).json({
+            message: '제목은 1자 이상 26자 이하로 작성해야 합니다.',
+            data: null,
+        });
+    }
+
+    if (!content || content.length > 2000) {
+        return res.status(400).json({
+            message: '내용은 1자 이상 2000자 이하로 작성해야 합니다.',
+            data: null,
+        });
+    }
 
     try {
         const post = await Post.getPostById(postId);
@@ -167,7 +201,7 @@ export const editPost = async (req, res) => {
             post.likes,
             post.views,
             post.comments_cnt,
-            imageUrl,
+            imageUrl || null,
         );
         console.log('게시물 수정');
         res.status(200).json({
@@ -252,5 +286,60 @@ export const likePost = async (req, res) => {
     } catch (err) {
         console.error('좋아요 처리 중 오류 발생:', err);
         res.status(500).json({ message: '서버 오류', data: null });
+    }
+};
+
+// post의 Pre-signed URL 생성
+export const generatePostPresignedUrl = (req, res) => {
+    const { filename, contentType } = req.body;
+
+    if (!filename || !contentType) {
+        return res.status(400).json({ message: '파일 이름과 타입이 필요합니다.' });
+    }
+
+    const timestamp = Date.now(); // 파일명에 사용할 타임스탬프 생성
+    const fileKey = `postImages/${timestamp}_${filename}`;
+
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: fileKey,
+        Expires: 60, // 60초 동안 유효
+        ContentType: contentType,
+    };
+
+    try {
+        const presignedUrl = s3.getSignedUrl('putObject', params);
+        const fileUrl = `https://d1udeqb19jqo1f.cloudfront.net/${fileKey}`;
+
+        res.status(200).json({
+            presignedUrl, // S3에 업로드할 URL
+            fileUrl,      // 프론트에서 사용할 CloudFront URL
+        });
+        console.log("Generated URLs:", { presignedUrl, fileUrl });
+    } catch (error) {
+        console.error('Pre-signed URL 생성 실패:', error);
+        res.status(500).json({ message: 'Pre-signed URL 생성 실패' });
+    }
+};
+
+
+export const deletePostImage = async (req,res) => {
+    const key = req.params.imageUrl;
+
+    if (!key) {
+        return res.status(400).json({ message: "이미지 URL이 필요합니다." });
+    }
+
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `postImages/${key}`,
+    };
+
+    try {
+        await s3.deleteObject(params).promise(); // S3에서 파일 삭제
+        res.status(200).json({ message: "이미지가 삭제되었습니다." });
+    } catch (error) {
+        console.error("이미지 삭제 오류:", error);
+        res.status(500).json({ message: "이미지 삭제 중 오류가 발생했습니다." });
     }
 };
