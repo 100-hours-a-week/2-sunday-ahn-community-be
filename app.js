@@ -13,7 +13,7 @@ import commentRoutes from './routers/commentRouter.js';
 import commonRoutes from './routers/commonRouter.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 2000;
 
 // trust proxy 설정
 app.set('trust proxy', 1);
@@ -100,6 +100,6 @@ app.use('/posts', postRoutes);
 app.use('/comments', commentRoutes);
 
 // 서버 실행
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
     console.log(`${PORT}에서 서버 실행 중`);
 });
